@@ -34,6 +34,18 @@ export const translations: Record<string, I18nText> = {
     en: "Back",
     ar: "رجوع",
   },
+  home: {
+    en: "Home",
+    ar: "الرئيسية",
+  },
+  language: {
+    en: "Language",
+    ar: "اللغة",
+  },
+  view: {
+    en: "View",
+    ar: "عرض",
+  },
   submit: {
     en: "Submit",
     ar: "إرسال",
@@ -274,6 +286,14 @@ export const translations: Record<string, I18nText> = {
     en: "Land",
     ar: "أرض",
   },
+  tower: {
+    en: "Tower",
+    ar: "برج",
+  },
+  villaFloor: {
+    en: "Villa Floor",
+    ar: "دور فيلا",
+  },
   commercial: {
     en: "Commercial",
     ar: "تجاري",
@@ -373,14 +393,6 @@ export const translations: Record<string, I18nText> = {
   trustPrivacy: {
     en: "Your details are private and only used to contact you about this listing.",
     ar: "بياناتك خاصة وتُستخدم فقط للتواصل معك بخصوص هذا العرض.",
-  },
-  townhouse: {
-    en: "Townhouse",
-    ar: "تاون هاوس",
-  },
-  studio: {
-    en: "Studio",
-    ar: "استوديو",
   },
   selectType: {
     en: "Select type",

@@ -218,10 +218,20 @@ export default function Home() {
                       className={`flex h-14 w-full rounded-xl border border-slate-200 bg-white px-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200 ${lang === "ar" ? "text-right" : "text-left"}`}
                     >
                       <option>{t("any", lang)}</option>
-                      <option>{t("villa", lang)}</option>
-                      <option>{t("apartment", lang)}</option>
-                      <option>{t("townhouse", lang)}</option>
-                      <option>{t("studio", lang)}</option>
+                      {searchType === "buy" ? (
+                        <>
+                          <option value="villa">{t("villa", lang)}</option>
+                          <option value="apartment">{t("apartment", lang)}</option>
+                          <option value="land">{t("land", lang)}</option>
+                          <option value="tower">{t("tower", lang)}</option>
+                        </>
+                      ) : (
+                        <>
+                          <option value="villa">{t("villa", lang)}</option>
+                          <option value="apartment">{t("apartment", lang)}</option>
+                          <option value="villa_floor">{t("villaFloor", lang)}</option>
+                        </>
+                      )}
                     </select>
                   </div>
 

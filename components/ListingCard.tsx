@@ -58,8 +58,8 @@ export default function ListingCard({
   }
 
   const cardContent = (
-    <Card className="overflow-hidden hover:shadow-soft-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer h-full">
-      <div className="relative h-64 w-full">
+    <Card className="overflow-hidden hover:shadow-soft-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer h-full md:h-auto">
+      <div className="relative h-48 md:h-64 w-full">
         <Image
           src={image}
           alt={displayTitle}
@@ -73,8 +73,8 @@ export default function ListingCard({
           </span>
         </div>
       </div>
-      <CardContent className="p-6">
-        <h3 className="font-semibold text-lg mb-2 line-clamp-1 text-slate-900 leading-[1.3]">
+      <CardContent className="p-4 md:p-6">
+        <h3 className="font-semibold text-base md:text-lg mb-2 line-clamp-1 text-slate-900 leading-[1.3]">
           {displayTitle}
         </h3>
         <div className="mb-4">

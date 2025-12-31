@@ -193,12 +193,14 @@ export default function AboutPage() {
                   Browse Properties
                 </Button>
               </Link>
-              <Button
-                size="lg"
-                className="bg-white/10 text-white border-2 border-white hover:bg-white/20 rounded-xl px-8 py-6 text-base font-semibold h-auto"
-              >
-                List Your Property
-              </Button>
+              <Link href="/sell">
+                <Button
+                  size="lg"
+                  className="bg-white/10 text-white border-2 border-white hover:bg-white/20 rounded-xl px-8 py-6 text-base font-semibold h-auto"
+                >
+                  List Your Property
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -397,11 +397,29 @@ export default function SellPage() {
                   errors.propertyType ? "border-red-300" : "border-slate-200"
                 } ${lang === "ar" ? "text-right" : "text-left"}`}
               >
-                <option value="">{t("selectType", lang)}</option>
-                <option value="apartment">{t("apartment", lang)}</option>
-                <option value="villa">{t("villa", lang)}</option>
-                <option value="land">{t("land", lang)}</option>
-                <option value="commercial">{t("commercial", lang)}</option>
+                  <option value="">{t("selectType", lang)}</option>
+                {formData.purpose === "sell" ? (
+                  <>
+                    <option value="villa">{t("villa", lang)}</option>
+                    <option value="apartment">{t("apartment", lang)}</option>
+                    <option value="land">{t("land", lang)}</option>
+                    <option value="tower">{t("tower", lang)}</option>
+                  </>
+                ) : formData.purpose === "rent" ? (
+                  <>
+                    <option value="villa">{t("villa", lang)}</option>
+                    <option value="apartment">{t("apartment", lang)}</option>
+                    <option value="villa_floor">{t("villaFloor", lang)}</option>
+                  </>
+                ) : (
+                  <>
+                    <option value="villa">{t("villa", lang)}</option>
+                    <option value="apartment">{t("apartment", lang)}</option>
+                    <option value="land">{t("land", lang)}</option>
+                    <option value="tower">{t("tower", lang)}</option>
+                    <option value="villa_floor">{t("villaFloor", lang)}</option>
+                  </>
+                )}
               </select>
               {errors.propertyType && (
                 <p className="mt-1 text-sm text-red-600">{errors.propertyType}</p>

@@ -44,14 +44,22 @@ function PropertiesPageContent() {
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | undefined>()
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
   const [showFilters, setShowFilters] = useState(false)
-  const [selectedGovernorateId, setSelectedGovernorateId] = useState<string | null>(null)
+  const [selectedGovernorateIds, setSelectedGovernorateIds] = useState<string[]>([])
   const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>([])
+  const [bedsMin, setBedsMin] = useState<number | null>(null)
+  const [bathsMin, setBathsMin] = useState<number | null>(null)
 
   // Refs for scrolling listings into view
   const listingRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
 
-  // Prevent body scroll when filters modal is open
+  // Prevent body scroll when filters modal is open (mobile only)
   useEffect(() => {
+    // Only apply on mobile screens (md:hidden means modal only shows on mobile)
+    if (typeof window === 'undefined') return
+    
+    const isMobile = window.innerWidth < 768 // md breakpoint
+    if (!isMobile) return
+
     const prevOverflow = document.body.style.overflow
     if (showFilters) {
       document.body.style.overflow = 'hidden'
@@ -124,17 +132,20 @@ function PropertiesPageContent() {
       let matchesPropertyType = true
       if (propertyTypeFilter !== "any") {
         const titleLower = property.title.toLowerCase()
-        const filterLower = propertyTypeFilter.toLowerCase()
+        // Normalize filter: replace underscores with spaces for matching
+        const filterNormalized = propertyTypeFilter.toLowerCase().replace(/_/g, " ")
         // Check if title contains the property type word
-        matchesPropertyType = titleLower.includes(filterLower)
+        matchesPropertyType = titleLower.includes(filterNormalized)
       }
       
-      // Filter by governorate (if selected)
-      let matchesGovernorate = true
-      if (selectedGovernorateId) {
-        const governorateAreas = getAreasForGovernorate(selectedGovernorateId)
-        const areaIds = governorateAreas.map((a) => a.id)
-        matchesGovernorate = property.areaInfo?.id ? areaIds.includes(property.areaInfo.id) : false
+      // Filter by governorates (if any selected)
+      let matchesGovernorates = true
+      if (selectedGovernorateIds.length > 0) {
+        const allAreaIds = selectedGovernorateIds.flatMap((govId) => {
+          const governorateAreas = getAreasForGovernorate(govId)
+          return governorateAreas.map((a) => a.id)
+        })
+        matchesGovernorates = property.areaInfo?.id ? allAreaIds.includes(property.areaInfo.id) : false
       }
       
       // Filter by areas (if any selected)
@@ -143,9 +154,23 @@ function PropertiesPageContent() {
         matchesAreas = property.areaInfo?.id ? selectedAreaIds.includes(property.areaInfo.id) : false
       }
       
-      return matchesType && matchesSearch && matchesMaxPrice && matchesPropertyType && matchesGovernorate && matchesAreas
+      // Filter by bedrooms (if set)
+      let matchesBeds = true
+      if (bedsMin !== null) {
+        const propertyBeds = property.bedrooms ?? 0
+        matchesBeds = propertyBeds >= bedsMin
+      }
+      
+      // Filter by bathrooms (if set)
+      let matchesBaths = true
+      if (bathsMin !== null) {
+        const propertyBaths = property.bathrooms ?? 0
+        matchesBaths = propertyBaths >= bathsMin
+      }
+      
+      return matchesType && matchesSearch && matchesMaxPrice && matchesPropertyType && matchesGovernorates && matchesAreas && matchesBeds && matchesBaths
     })
-  }, [searchType, searchQuery, maxPrice, propertyTypeFilter, selectedGovernorateId, selectedAreaIds])
+  }, [searchType, searchQuery, maxPrice, propertyTypeFilter, selectedGovernorateIds, selectedAreaIds, bedsMin, bathsMin])
 
   // Properties that are SAFE to send to the map
   const mappableProperties = useMemo(() => {
@@ -194,11 +219,6 @@ function PropertiesPageContent() {
     }
   }, [])
 
-  // Handle governorate selection
-  const handleGovernorateSelect = useCallback((governorateId: string) => {
-    setSelectedGovernorateId(governorateId)
-    setSelectedAreaIds([]) // Reset areas when governorate changes
-  }, [])
 
   // Handle area toggle
   const handleAreaToggle = useCallback((areaId: string) => {
@@ -209,10 +229,12 @@ function PropertiesPageContent() {
 
   // Handle clear filters
   const handleClearFilters = useCallback(() => {
-    setSelectedGovernorateId(null)
+    setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
     setPropertyTypeFilter("any")
+    setBedsMin(null)
+    setBathsMin(null)
   }, [])
 
   // Handle apply filters (close modal)
@@ -223,20 +245,24 @@ function PropertiesPageContent() {
   // Handle clear search and filters
   const handleClearSearch = useCallback(() => {
     setSearchQuery("")
-    setSelectedGovernorateId(null)
+    setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
     setPropertyTypeFilter("any")
+    setBedsMin(null)
+    setBathsMin(null)
   }, [])
 
   // Handle show all properties (reset everything including URL params)
   const handleShowAllProperties = useCallback(() => {
     setSearchType("buy")
     setSearchQuery("")
-    setSelectedGovernorateId(null)
+    setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
     setPropertyTypeFilter("any")
+    setBedsMin(null)
+    setBathsMin(null)
     // Clear URL params by navigating to /properties
     window.history.replaceState({}, "", "/properties")
   }, [])
@@ -246,11 +272,79 @@ function PropertiesPageContent() {
     setSearchType("buy")
   }, [])
 
-  // Get available areas for selected governorate
+  // Build mapping: areaId -> governorateId (for pruning areas when governorate is unselected)
+  const areaToGovernorateId = useMemo(() => {
+    const mapping: Record<string, string> = {}
+    GOVERNORATES.forEach((gov) => {
+      gov.areas.forEach((area) => {
+        mapping[area.id] = gov.id
+      })
+    })
+    return mapping
+  }, [])
+
+  // Handle governorate toggle (multi-select)
+  const handleGovernorateToggle = useCallback((governorateId: string) => {
+    setSelectedGovernorateIds((prev) => {
+      const isSelected = prev.includes(governorateId)
+      const newIds = isSelected 
+        ? prev.filter((id) => id !== governorateId)
+        : [...prev, governorateId]
+      
+      // Only remove areas when governorate is being unselected
+      // When adding a governorate, keep all existing area selections
+      if (isSelected) {
+        // Remove only areas that belong to the unselected governorate
+        setSelectedAreaIds((prevAreas) => 
+          prevAreas.filter((areaId) => areaToGovernorateId[areaId] !== governorateId)
+        )
+      }
+      
+      return newIds
+    })
+  }, [areaToGovernorateId])
+
+  // Get areas for all selected governorates
   const availableAreas = useMemo(() => {
-    if (!selectedGovernorateId) return []
-    return getAreasForGovernorate(selectedGovernorateId)
-  }, [selectedGovernorateId])
+    if (selectedGovernorateIds.length === 0) return []
+    const allAreas = selectedGovernorateIds.flatMap((govId) => 
+      getAreasForGovernorate(govId)
+    )
+    // Remove duplicates by id
+    const seen = new Set<string>()
+    return allAreas.filter((area) => {
+      if (seen.has(area.id)) {
+        return false
+      }
+      seen.add(area.id)
+      return true
+    })
+  }, [selectedGovernorateIds])
+
+  // Calculate active filters count
+  const activeFilterCount = useMemo(() => {
+    let count = 0
+    if (propertyTypeFilter !== "any" && propertyTypeFilter !== "") count++
+    if (selectedGovernorateIds.length > 0) count++
+    if (selectedAreaIds.length > 0) count++
+    if (bedsMin !== null) count++
+    if (bathsMin !== null) count++
+    if (maxPrice !== null) count++
+    return count
+  }, [propertyTypeFilter, selectedGovernorateIds.length, selectedAreaIds.length, bedsMin, bathsMin, maxPrice])
+
+  // Reset propertyTypeFilter if it becomes invalid when switching buy/rent
+  useEffect(() => {
+    if (propertyTypeFilter === "any") return
+    
+    const buyTypes = ["villa", "apartment", "land", "tower"]
+    const rentTypes = ["villa", "apartment", "villa_floor"]
+    const validTypes = searchType === "buy" ? buyTypes : rentTypes
+    
+    if (!validTypes.includes(propertyTypeFilter)) {
+      setPropertyTypeFilter("any")
+    }
+  }, [searchType, propertyTypeFilter])
 
   // SAFE selected property for map flyTo
   const selectedProperty = useMemo(() => {
@@ -279,14 +373,14 @@ function PropertiesPageContent() {
   }, [selectedPropertyId, filteredProperties])
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen md:h-[calc(100vh-4rem)]">
       {/* Search Bar - Sticky Top */}
-      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col gap-4">
+      <div className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm flex-shrink-0">
+        <div className="container mx-auto px-4 py-3 md:py-4">
+          <div className="flex flex-col gap-3 md:gap-4">
             {/* Mobile Header */}
             <div className="flex items-center justify-between md:hidden">
-              <h1 className={`text-xl font-bold text-slate-900 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("properties", lang)}</h1>
+              <h1 className={`text-lg font-bold text-slate-900 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("properties", lang)}</h1>
               <div className="inline-flex items-center rounded-xl bg-white shadow-soft border border-slate-200 p-1">
                 <button
                   type="button"
@@ -338,6 +432,11 @@ function PropertiesPageContent() {
                 >
                   <Filter className={`h-4 w-4 ${lang === "ar" ? "ml-2" : "mr-2"}`} />
                   {t("filters", lang)}
+                  {activeFilterCount > 0 && (
+                    <span className={`inline-flex items-center justify-center rounded-full bg-primary-600 text-white text-xs font-semibold w-5 h-5 ${lang === "ar" ? "mr-2" : "ml-2"}`}>
+                      {activeFilterCount}
+                    </span>
+                  )}
                 </Button>
               </div>
             </div>
@@ -374,16 +473,45 @@ function PropertiesPageContent() {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              {/* Governorate Selection */}
+              {/* Property Type Selection */}
+              <div className="mb-6">
+                <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("propertyTypeLabel", lang)}</h3>
+                <select
+                  value={propertyTypeFilter}
+                  onChange={(e) => setPropertyTypeFilter(e.target.value)}
+                  className={`flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200 ${
+                    lang === "ar" ? "text-right" : "text-left"
+                  }`}
+                >
+                  <option value="any">{t("any", lang)}</option>
+                  {searchType === "buy" ? (
+                    <>
+                      <option value="villa">{t("villa", lang)}</option>
+                      <option value="apartment">{t("apartment", lang)}</option>
+                      <option value="land">{t("land", lang)}</option>
+                      <option value="tower">{t("tower", lang)}</option>
+                    </>
+                  ) : (
+                    <>
+                      <option value="villa">{t("villa", lang)}</option>
+                      <option value="apartment">{t("apartment", lang)}</option>
+                      <option value="villa_floor">{t("villaFloor", lang)}</option>
+                    </>
+                  )}
+                </select>
+              </div>
+
+              {/* Governorate Selection (Multi-select) */}
               <div className="mb-6">
                 <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("governorate", lang)}</h3>
                 <div className="grid grid-cols-2 gap-2">
                   {GOVERNORATES.map((gov) => (
                     <button
                       key={gov.id}
-                      onClick={() => handleGovernorateSelect(gov.id)}
+                      type="button"
+                      onClick={() => handleGovernorateToggle(gov.id)}
                       className={`px-4 py-3 rounded-xl text-sm font-medium transition-all ${lang === "ar" ? "text-right" : "text-left"} ${
-                        selectedGovernorateId === gov.id
+                        selectedGovernorateIds.includes(gov.id)
                           ? "bg-primary-600 text-white shadow-sm"
                           : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                       }`}
@@ -394,11 +522,11 @@ function PropertiesPageContent() {
                 </div>
               </div>
 
-              {/* Area Selection (only show if governorate selected) */}
-              {selectedGovernorateId && availableAreas.length > 0 && (
+              {/* Area Selection (show if any governorate selected) */}
+              {selectedGovernorateIds.length > 0 && availableAreas.length > 0 && (
                 <div className="mb-6">
                   <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("areas", lang)}</h3>
-                  <div className="space-y-2">
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
                     {availableAreas.map((area) => (
                       <label
                         key={area.id}
@@ -416,6 +544,70 @@ function PropertiesPageContent() {
                   </div>
                 </div>
               )}
+
+              {/* Bedrooms Filter */}
+              <div className="mb-6">
+                <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("bedroomsLabel", lang)}</h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setBedsMin(null)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      bedsMin === null
+                        ? "bg-primary-600 text-white shadow-sm"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {t("any", lang)}
+                  </button>
+                  {[1, 2, 3, 4, 5].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setBedsMin(num)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        bedsMin === num
+                          ? "bg-primary-600 text-white shadow-sm"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {num}+
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Bathrooms Filter */}
+              <div className="mb-6">
+                <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("bathroomsLabel", lang)}</h3>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setBathsMin(null)}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      bathsMin === null
+                        ? "bg-primary-600 text-white shadow-sm"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {t("any", lang)}
+                  </button>
+                  {[1, 2, 3, 4].map((num) => (
+                    <button
+                      key={num}
+                      type="button"
+                      onClick={() => setBathsMin(num)}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        bathsMin === num
+                          ? "bg-primary-600 text-white shadow-sm"
+                          : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                      }`}
+                    >
+                      {num}+
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
             {/* Footer Actions */}
@@ -439,11 +631,11 @@ function PropertiesPageContent() {
       )}
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex min-h-0 overflow-hidden">
         {/* Desktop */}
-        <div className="hidden md:flex flex-1 overflow-hidden">
-            <div className="w-full md:w-[420px] lg:w-[480px] bg-white border-r overflow-hidden">
-                <div className="flex-1 overflow-y-auto">
+        <div className="hidden md:flex flex-1 min-h-0 w-full">
+            <div className="w-[420px] lg:w-[480px] bg-white border-r flex flex-col min-h-0 overflow-hidden">
+                <div className="flex-1 overflow-y-auto min-h-0 overscroll-contain">
                   <div className="px-4 py-3 border-b sticky top-0 bg-white z-10">
                     <p className={`text-sm text-slate-600 ${lang === "ar" ? "text-right" : "text-left"}`}>
                       {filteredProperties.length} {filteredProperties.length === 1 ? t("propertyFound", lang) : t("propertiesFound", lang)}
@@ -505,14 +697,14 @@ function PropertiesPageContent() {
                 </div>
               </div>
 
-          <div className="flex-1 relative">
+          <div className="flex-1 relative min-h-0 overflow-hidden">
             <MapView
               properties={mappableProperties}
               selectedPropertyId={selectedPropertyId}
               hoveredPropertyId={hoveredPropertyId}
               onPropertyClick={handlePropertySelect}
               onPropertyHover={handlePropertyHover}
-              className="sticky top-0 h-full"
+              className="h-full w-full"
             />
           </div>
         </div>
@@ -602,12 +794,12 @@ function PropertiesPageContent() {
                     </div>
                   ) : (
                     <>
-                      <div className="px-4 py-3 border-b sticky top-0 bg-white z-10">
-                        <p className={`text-sm text-slate-600 ${lang === "ar" ? "text-right" : "text-left"}`}>
+                      <div className="px-4 py-2 border-b sticky top-0 bg-white z-10">
+                        <p className={`text-xs text-slate-600 ${lang === "ar" ? "text-right" : "text-left"}`}>
                           {filteredProperties.length} {filteredProperties.length === 1 ? t("propertyFound", lang) : t("propertiesFound", lang)}
                         </p>
                       </div>
-                      <div className="px-4 pt-4 pb-4 space-y-4">
+                      <div className="px-3 pt-2 pb-4 space-y-3">
                   {filteredProperties.map((property) => (
                     <div
                       key={property.id}

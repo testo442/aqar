@@ -55,7 +55,7 @@ export default function MobileListingRail({
       <div
         ref={railRef}
         className="
-          flex gap-3 px-4 py-3
+          flex gap-2 px-3 py-2
           overflow-x-auto
           overscroll-x-contain
           scrollbar-none
@@ -74,9 +74,9 @@ export default function MobileListingRail({
               onClick={() => onSelect(property.id)}
               className={`
                 snap-start
-                flex-shrink-0 w-[260px]
-                bg-white rounded-2xl
-                shadow-lg
+                flex-shrink-0 w-[200px]
+                bg-white rounded-xl
+                shadow-md
                 overflow-hidden
                 text-left
                 transition
@@ -88,7 +88,7 @@ export default function MobileListingRail({
               `}
             >
               {/* Image */}
-              <div className="relative h-[110px] w-full">
+              <div className="relative h-[60px] w-full">
                 <Image
                   src={property.image}
                   alt={property.title}
@@ -96,49 +96,59 @@ export default function MobileListingRail({
                   className="object-cover"
                 />
                 <span
-                  className="
-                    absolute top-2 right-2
+                  className={`
+                    absolute top-1 ${lang === "ar" ? "left-1" : "right-1"}
                     bg-primary-600 text-white
-                    text-xs font-semibold
-                    px-2 py-1 rounded-full
-                  "
+                    text-[10px] font-semibold
+                    px-1.5 py-0.5 rounded-full
+                  `}
                 >
-                  {property.type === "buy" ? "For Sale" : "For Rent"}
+                  {property.type === "buy" ? t("forSale", lang) : t("forRent", lang)}
                 </span>
               </div>
 
               {/* Content */}
-              <div className="p-3 space-y-1">
-                <p className="text-sm font-semibold text-slate-900 truncate">
+              <div className="p-2 space-y-0.5">
+                <p className="text-xs font-semibold text-slate-900 truncate leading-tight">
                   {property.title}
                 </p>
                 <div>
-                  <p className="text-xs text-slate-600 truncate">
+                  <p className="text-[10px] text-slate-600 truncate leading-tight">
                     {property.location}
                   </p>
                   {!isValidLatLng(property.lat, property.lng) && (
-                    <p className="text-xs text-slate-500 mt-0.5 italic">
+                    <p className="text-[10px] text-slate-500 mt-0.5 italic leading-tight">
                       {t("locationNotAvailable", lang)}
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-bold text-primary-600">
-                    {new Intl.NumberFormat("en-KW", {
-                      style: "currency",
-                      currency: "KWD",
-                      maximumFractionDigits: 0,
-                    }).format(property.price)}
-                  </p>
+                <div className="flex items-center justify-between mt-1">
+                  {lang === "ar" ? (
+                    <p className="text-xs font-bold text-primary-600 tabular-nums" dir="ltr">
+                      {new Intl.NumberFormat("en-KW", {
+                        style: "currency",
+                        currency: "KWD",
+                        maximumFractionDigits: 0,
+                      }).format(property.price)}
+                    </p>
+                  ) : (
+                    <p className="text-xs font-bold text-primary-600 tabular-nums">
+                      {new Intl.NumberFormat("en-KW", {
+                        style: "currency",
+                        currency: "KWD",
+                        maximumFractionDigits: 0,
+                      }).format(property.price)}
+                    </p>
+                  )}
                   <Link
                     href={`/properties/${property.id}`}
                     onClick={(e) => {
                       e.stopPropagation()
                     }}
-                    className="flex items-center gap-1 text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+                    className={`flex items-center gap-0.5 text-[10px] font-semibold text-primary-600 hover:text-primary-700 transition-colors ${lang === "ar" ? "flex-row-reverse" : ""}`}
                   >
-                    View
-                    <ChevronRight className="h-3 w-3" />
+                    {t("view", lang)}
+                    <ChevronRight className={`h-2.5 w-2.5 ${lang === "ar" ? "rotate-180" : ""}`} />
                   </Link>
                 </div>
               </div>

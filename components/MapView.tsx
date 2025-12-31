@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useMemo, useRef } from "react"
+import Link from "next/link"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
@@ -202,11 +203,10 @@ export default function MapView({
             mouseout: () => onPropertyHover?.(undefined),
           }}
         >
-          <Popup>
+          <Popup maxWidth={220} className="custom-popup">
             <div className="p-2">
-              <h3 className="font-semibold text-sm text-slate-900 mb-1">{property.title}</h3>
-              <p className="text-xs text-slate-600 mb-2">{property.location}</p>
-              <p className="text-sm font-bold text-primary-600">
+              <h3 className="font-semibold text-xs text-slate-900 mb-1 line-clamp-2">{property.title}</h3>
+              <p className="text-xs font-bold text-primary-600 mb-2 tabular-nums">
                 {new Intl.NumberFormat("en-KW", {
                   style: "currency",
                   currency: "KWD",
@@ -214,6 +214,12 @@ export default function MapView({
                 }).format(property.price)}
                 {property.type === "rent" && " /month"}
               </p>
+              <Link
+                href={`/properties/${property.id}`}
+                className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors underline"
+              >
+                View details
+              </Link>
             </div>
           </Popup>
         </Marker>
