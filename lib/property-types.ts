@@ -2,8 +2,8 @@
  * Property type definitions for BUY vs RENT
  */
 
-export const BUY_PROPERTY_TYPES = ["villa", "apartment", "land", "tower"] as const
-export const RENT_PROPERTY_TYPES = ["villa", "apartment", "villa_floor"] as const
+export const BUY_PROPERTY_TYPES = ["villa", "apartment", "land", "tower", "chalet"] as const
+export const RENT_PROPERTY_TYPES = ["villa", "apartment", "villa_floor", "chalet"] as const
 
 export type BuyPropertyType = typeof BUY_PROPERTY_TYPES[number]
 export type RentPropertyType = typeof RENT_PROPERTY_TYPES[number]

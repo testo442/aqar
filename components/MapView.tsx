@@ -7,6 +7,8 @@ import L from "leaflet"
 import "leaflet/dist/leaflet.css"
 import type { Property } from "@/types/property"
 import { sanitizeLatLng, logInvalidCoords } from "@/lib/geo"
+import { useLanguage } from "@/app/providers"
+import { t } from "@/lib/translations"
 
 // -----------------------------
 // Leaflet default marker fix
@@ -103,6 +105,52 @@ function MapViewUpdater({ center }: { center: [number, number] }) {
 }
 
 // -----------------------------
+// Popup controller - ensures only one popup is open at a time
+// -----------------------------
+function PopupController({
+  selectedPropertyId,
+  mappableProperties,
+}: {
+  selectedPropertyId?: string
+  mappableProperties: Property[]
+}) {
+  const map = useMap()
+
+  useEffect(() => {
+    // Close all popups first
+    map.closePopup()
+
+    if (!selectedPropertyId) return
+
+    // Find the selected property's marker and open its popup
+    const property = mappableProperties.find((p) => p.id === selectedPropertyId)
+    if (!property) return
+
+    const coords = sanitizeLatLng(property.lat, property.lng)
+    if (!coords) return
+
+    // Use setTimeout to ensure markers are rendered
+    setTimeout(() => {
+      map.eachLayer((layer) => {
+        if (layer instanceof L.Marker) {
+          const marker = layer as L.Marker
+          const latlng = marker.getLatLng()
+          // Check if this marker matches the selected property coordinates
+          if (
+            Math.abs(latlng.lat - coords.lat) < 0.0001 &&
+            Math.abs(latlng.lng - coords.lng) < 0.0001
+          ) {
+            marker.openPopup()
+          }
+        }
+      })
+    }, 50)
+  }, [map, selectedPropertyId, mappableProperties])
+
+  return null
+}
+
+// -----------------------------
 // Safe flyTo (never crashes)
 // -----------------------------
 function MapFlyTo({
@@ -115,15 +163,23 @@ function MapFlyTo({
   const map = useMap()
 
   useEffect(() => {
-    if (!selectedPropertyId) return
+    if (!selectedPropertyId) {
+      // Close all popups when selection is cleared
+      map.closePopup()
+      return
+    }
 
     // CRITICAL: only look inside mappableProperties (already validated)
     const property = mappableProperties.find((p) => p.id === selectedPropertyId)
-    if (!property) return
+    if (!property) {
+      map.closePopup()
+      return
+    }
 
     const coords = sanitizeLatLng(property.lat, property.lng)
     if (!coords) {
       // Already logged in getValidLatLng, just skip flyTo
+      map.closePopup()
       return
     }
 
@@ -153,6 +209,7 @@ export default function MapView({
   className = "",
 }: MapViewProps) {
   const mapRef = useRef<L.Map | null>(null)
+  const { lang } = useLanguage()
 
   // Only allow valid properties to touch Leaflet
   const mappableProperties = useMemo(() => {
@@ -198,12 +255,20 @@ export default function MapView({
           position={[coords.lat, coords.lng]}
           icon={createCustomIcon(color, isHighlighted)}
           eventHandlers={{
-            click: () => onPropertyClick?.(property.id),
+            click: () => {
+              onPropertyClick?.(property.id)
+            },
             mouseover: () => onPropertyHover?.(property.id),
             mouseout: () => onPropertyHover?.(undefined),
           }}
         >
-          <Popup maxWidth={220} className="custom-popup">
+          <Popup
+            key={property.id}
+            maxWidth={220}
+            className="custom-popup"
+            autoClose={true}
+            closeOnClick={true}
+          >
             <div className="p-2">
               <h3 className="font-semibold text-xs text-slate-900 mb-1 line-clamp-2">{property.title}</h3>
               <p className="text-xs font-bold text-primary-600 mb-2 tabular-nums">
@@ -218,14 +283,14 @@ export default function MapView({
                 href={`/properties/${property.id}`}
                 className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors underline"
               >
-                View details
+                {t("viewDetails", lang)}
               </Link>
             </div>
           </Popup>
         </Marker>
       )
     })
-  }, [mappableProperties, selectedPropertyId, hoveredPropertyId, onPropertyClick, onPropertyHover])
+  }, [mappableProperties, selectedPropertyId, hoveredPropertyId, onPropertyClick, onPropertyHover, lang])
 
   return (
     <div className={`relative w-full ${className}`} style={{ height: "100%", minHeight: "100%" }}>
@@ -245,12 +310,13 @@ export default function MapView({
 
         <MapViewUpdater center={center} />
         <MapFlyTo
-  selectedPropertyId={selectedPropertyId}
-  mappableProperties={mappableProperties}
-/>
-
-
-
+          selectedPropertyId={selectedPropertyId}
+          mappableProperties={mappableProperties}
+        />
+        <PopupController
+          selectedPropertyId={selectedPropertyId}
+          mappableProperties={mappableProperties}
+        />
 
         {markers}
       </MapContainer>

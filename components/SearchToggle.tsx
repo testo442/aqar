@@ -1,6 +1,8 @@
 "use client"
 
 import { cn } from "@/lib/utils"
+import { useLanguage } from "@/app/providers"
+import { t } from "@/lib/translations"
 
 interface SearchToggleProps {
   value: "buy" | "rent"
@@ -9,6 +11,7 @@ interface SearchToggleProps {
 }
 
 export default function SearchToggle({ value, onChange, className }: SearchToggleProps) {
+  const { lang } = useLanguage()
   return (
     <div className={cn("inline-flex items-center rounded-lg bg-slate-100 p-1", className)}>
       <button
@@ -21,7 +24,7 @@ export default function SearchToggle({ value, onChange, className }: SearchToggl
             : "text-slate-600 hover:text-slate-900"
         )}
       >
-        Buy
+        {t("buy", lang)}
       </button>
       <button
         type="button"
@@ -33,7 +36,7 @@ export default function SearchToggle({ value, onChange, className }: SearchToggl
             : "text-slate-600 hover:text-slate-900"
         )}
       >
-        Rent
+        {t("rent", lang)}
       </button>
     </div>
   )

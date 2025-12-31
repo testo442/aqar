@@ -46,6 +46,10 @@ export const translations: Record<string, I18nText> = {
     en: "View",
     ar: "عرض",
   },
+  viewDetails: {
+    en: "View details",
+    ar: "عرض التفاصيل",
+  },
   submit: {
     en: "Submit",
     ar: "إرسال",
@@ -291,8 +295,12 @@ export const translations: Record<string, I18nText> = {
     ar: "برج",
   },
   villaFloor: {
-    en: "Villa Floor",
-    ar: "دور فيلا",
+    en: "Floor",
+    ar: "دور",
+  },
+  chalet: {
+    en: "Chalet",
+    ar: "شاليه",
   },
   commercial: {
     en: "Commercial",
@@ -381,6 +389,10 @@ export const translations: Record<string, I18nText> = {
   errorMessage: {
     en: "Something went wrong. Please try again.",
     ar: "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
+  },
+  emailFailed: {
+    en: "We couldn't send your submission. Please try again later or contact us directly.",
+    ar: "لم نتمكن من إرسال طلبك. يرجى المحاولة مرة أخرى لاحقاً أو الاتصال بنا مباشرة.",
   },
   networkError: {
     en: "Network error. Please check your connection and try again.",

@@ -149,7 +149,12 @@ export default function SellPage() {
       if (data.ok) {
         setIsSuccess(true)
       } else {
-        setError(data.error || t("errorMessage", lang))
+        // Handle specific error codes
+        if (data.error === "EMAIL_FAILED") {
+          setError(t("emailFailed", lang))
+        } else {
+          setError(data.error || t("errorMessage", lang))
+        }
       }
     } catch (err) {
       // Handle network errors or JSON parse errors
@@ -404,12 +409,14 @@ export default function SellPage() {
                     <option value="apartment">{t("apartment", lang)}</option>
                     <option value="land">{t("land", lang)}</option>
                     <option value="tower">{t("tower", lang)}</option>
+                    <option value="chalet">{t("chalet", lang)}</option>
                   </>
                 ) : formData.purpose === "rent" ? (
                   <>
                     <option value="villa">{t("villa", lang)}</option>
                     <option value="apartment">{t("apartment", lang)}</option>
                     <option value="villa_floor">{t("villaFloor", lang)}</option>
+                    <option value="chalet">{t("chalet", lang)}</option>
                   </>
                 ) : (
                   <>
@@ -418,6 +425,7 @@ export default function SellPage() {
                     <option value="land">{t("land", lang)}</option>
                     <option value="tower">{t("tower", lang)}</option>
                     <option value="villa_floor">{t("villaFloor", lang)}</option>
+                    <option value="chalet">{t("chalet", lang)}</option>
                   </>
                 )}
               </select>

@@ -3,12 +3,14 @@
  * 
  * Handles property listing lead submissions from /sell page.
  * 
- * Required Environment Variables (for production email delivery):
+ * Environment Variables (for production email delivery):
  * - RESEND_API_KEY: Your Resend API key
  * - LEADS_TO_EMAIL: Destination email address for leads
- * - RESEND_FROM (optional): Sender email (defaults to "Aqarna Leads <onboarding@resend.dev>")
+ * - LEADS_FROM_EMAIL (optional): Sender email (defaults to "Aqarna Leads <onboarding@resend.dev>")
  * 
- * If env vars are not set, leads are logged to console (dev-friendly).
+ * Behavior:
+ * - Development: Always logs to console, never sends email
+ * - Production: Sends email if env vars are configured, otherwise returns error
  */
 
 import { NextRequest, NextResponse } from "next/server"
@@ -68,6 +70,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Validate coordinates are within valid ranges (lat: -90 to 90, lng: -180 to 180)
+    if (!Number.isFinite(body.lat) || !Number.isFinite(body.lng) || 
+        body.lat < -90 || body.lat > 90 || body.lng < -180 || body.lng > 180) {
+      return NextResponse.json(
+        { ok: false, error: "Please select a valid location on the map." },
+        { status: 400 }
+      )
+    }
+
     // Kuwait bounds: lat between 28.3 and 30.2, lng between 46.3 and 49.3
     if (body.lat < 28.3 || body.lat > 30.2 || body.lng < 46.3 || body.lng > 49.3) {
       return NextResponse.json(
@@ -117,51 +128,68 @@ ${body.imageLinks && body.imageLinks.length > 0 ? `Image Links:\n${body.imageLin
 Submitted: ${timestamp}
     `.trim()
 
-    // Check if Resend is configured
+    const isProd = process.env.NODE_ENV === "production"
     const resendApiKey = process.env.RESEND_API_KEY
     const leadsToEmail = process.env.LEADS_TO_EMAIL
-    const resendFrom = process.env.RESEND_FROM || "Aqarna Leads <onboarding@resend.dev>"
+    const leadsFromEmail = process.env.LEADS_FROM_EMAIL || "Aqarna Leads <onboarding@resend.dev>"
     const resendConfigured = resendApiKey && leadsToEmail
 
-    if (resendConfigured) {
-      // Send email via Resend SDK
-      try {
-        const resend = new Resend(resendApiKey)
-        
-        const emailSubject = `New Aqarna lead — ${purposeLabel} ${body.propertyType} — ${governorateName}/${body.area}`
-        
-        const result = await resend.emails.send({
-          from: resendFrom,
-          to: leadsToEmail,
-          subject: emailSubject,
-          text: emailText,
+    // Always log in development
+    if (!isProd) {
+      console.log("=".repeat(60))
+      console.log("NEW PROPERTY LISTING LEAD (DEV MODE)")
+      console.log("=".repeat(60))
+      console.log(emailText)
+      console.log("=".repeat(60))
+      console.log("Note: Email sending is disabled in development mode")
+      return NextResponse.json({ ok: true, mode: "log" })
+    }
+
+    // Production: require email configuration
+    if (!resendConfigured) {
+      console.error("[List Property API] Missing email configuration in production")
+      return NextResponse.json(
+        { ok: false, error: "EMAIL_FAILED" },
+        { status: 500 }
+      )
+    }
+
+    // Production: Send email via Resend
+    try {
+      const resend = new Resend(resendApiKey)
+      
+      const emailSubject = `New Aqarna lead — ${purposeLabel} ${body.propertyType} — ${governorateName}/${body.area}`
+      
+      const result = await resend.emails.send({
+        from: leadsFromEmail,
+        to: leadsToEmail,
+        subject: emailSubject,
+        text: emailText,
+      })
+
+      if (result.error) {
+        // Log error without exposing sensitive details
+        console.error("[Resend API Error]", {
+          message: result.error.message,
+          name: result.error.name,
         })
-
-        if (result.error) {
-          console.error("[Resend API Error]", result.error)
-          return NextResponse.json(
-            { ok: false, error: "Failed to send email. Please try again later." },
-            { status: 500 }
-          )
-        }
-
-        return NextResponse.json({ ok: true, mode: "email" })
-      } catch (error) {
-        console.error("[Resend API Request Failed]", error)
         return NextResponse.json(
-          { ok: false, error: "Failed to send email. Please try again later." },
+          { ok: false, error: "EMAIL_FAILED" },
           { status: 500 }
         )
       }
-    }
 
-    // Fallback: Log to console (dev mode)
-    console.log("=".repeat(60))
-    console.log("NEW PROPERTY LISTING LEAD (DEV MODE)")
-    console.log("=".repeat(60))
-    console.log(emailText)
-    console.log("=".repeat(60))
-    console.log("Note: Set RESEND_API_KEY and LEADS_TO_EMAIL to enable email delivery")
+      return NextResponse.json({ ok: true, mode: "email" })
+    } catch (error) {
+      // Log error without exposing sensitive details
+      console.error("[Resend API Request Failed]", {
+        message: error instanceof Error ? error.message : "Unknown error",
+      })
+      return NextResponse.json(
+        { ok: false, error: "EMAIL_FAILED" },
+        { status: 500 }
+      )
+    }
 
     return NextResponse.json({ ok: true, mode: "log" })
   } catch (error) {

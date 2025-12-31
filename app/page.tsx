@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Search, MapPin, DollarSign, Zap, Shield, Map } from "lucide-react"
@@ -87,7 +87,22 @@ export default function Home() {
   const [searchType, setSearchType] = useState<"buy" | "rent">("buy")
   const [location, setLocation] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
-  const [propertyType, setPropertyType] = useState("Any")
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([])
+
+  // Clean up invalid types when switching buy/rent
+  useEffect(() => {
+    if (selectedPropertyTypes.length === 0) return
+    
+    const buyTypes = ["villa", "apartment", "land", "tower", "chalet"]
+    const rentTypes = ["villa", "apartment", "villa_floor", "chalet"]
+    const validTypes = searchType === "buy" ? buyTypes : rentTypes
+    
+    // Filter out invalid types
+    const validSelected = selectedPropertyTypes.filter((type) => validTypes.includes(type))
+    if (validSelected.length !== selectedPropertyTypes.length) {
+      setSelectedPropertyTypes(validSelected)
+    }
+  }, [searchType, selectedPropertyTypes])
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -109,9 +124,9 @@ export default function Home() {
       params.set("maxPrice", priceValue)
     }
     
-    // Add propertyType if not "Any"
-    if (propertyType && propertyType !== "Any") {
-      params.set("propertyType", propertyType.toLowerCase())
+    // Add types if any selected (comma-separated)
+    if (selectedPropertyTypes.length > 0) {
+      params.set("types", selectedPropertyTypes.join(","))
     }
     
     // Navigate to /properties with query params
@@ -162,7 +177,7 @@ export default function Home() {
                     }`}
                     aria-label="Switch to Arabic"
                   >
-                    AR
+                    {lang === "ar" ? "عربي" : "AR"}
                   </button>
                 </div>
               </div>
@@ -206,33 +221,86 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* Property Type */}
+                  {/* Property Type (Multi-select Chips) */}
                   <div className="md:col-span-2">
-                    <label htmlFor="type" className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
+                    <label className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
                       {t("propertyType", lang)}
                     </label>
-                    <select
-                      id="type"
-                      value={propertyType}
-                      onChange={(e) => setPropertyType(e.target.value)}
-                      className={`flex h-14 w-full rounded-xl border border-slate-200 bg-white px-4 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200 ${lang === "ar" ? "text-right" : "text-left"}`}
-                    >
-                      <option>{t("any", lang)}</option>
+                    <div className="flex flex-wrap gap-2">
+                      {/* "Any" chip */}
+                      <button
+                        type="button"
+                        onClick={() => setSelectedPropertyTypes([])}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                          selectedPropertyTypes.length === 0
+                            ? "bg-primary-600 text-white shadow-sm"
+                            : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                        }`}
+                      >
+                        {t("any", lang)}
+                      </button>
+                      {/* Property type chips */}
                       {searchType === "buy" ? (
                         <>
-                          <option value="villa">{t("villa", lang)}</option>
-                          <option value="apartment">{t("apartment", lang)}</option>
-                          <option value="land">{t("land", lang)}</option>
-                          <option value="tower">{t("tower", lang)}</option>
+                          {["villa", "apartment", "land", "tower", "chalet"].map((type) => (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => {
+                                if (selectedPropertyTypes.includes(type)) {
+                                  // Deselect
+                                  const newTypes = selectedPropertyTypes.filter((t) => t !== type)
+                                  setSelectedPropertyTypes(newTypes)
+                                } else {
+                                  // Select (automatically deselects "Any")
+                                  setSelectedPropertyTypes([...selectedPropertyTypes, type])
+                                }
+                              }}
+                              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                                selectedPropertyTypes.includes(type)
+                                  ? "bg-primary-600 text-white shadow-sm"
+                                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                              }`}
+                            >
+                              {type === "villa" ? t("villa", lang) :
+                               type === "apartment" ? t("apartment", lang) :
+                               type === "land" ? t("land", lang) :
+                               type === "tower" ? t("tower", lang) :
+                               type === "chalet" ? t("chalet", lang) : type}
+                            </button>
+                          ))}
                         </>
                       ) : (
                         <>
-                          <option value="villa">{t("villa", lang)}</option>
-                          <option value="apartment">{t("apartment", lang)}</option>
-                          <option value="villa_floor">{t("villaFloor", lang)}</option>
+                          {["villa", "apartment", "villa_floor", "chalet"].map((type) => (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => {
+                                if (selectedPropertyTypes.includes(type)) {
+                                  // Deselect
+                                  const newTypes = selectedPropertyTypes.filter((t) => t !== type)
+                                  setSelectedPropertyTypes(newTypes)
+                                } else {
+                                  // Select (automatically deselects "Any")
+                                  setSelectedPropertyTypes([...selectedPropertyTypes, type])
+                                }
+                              }}
+                              className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                                selectedPropertyTypes.includes(type)
+                                  ? "bg-primary-600 text-white shadow-sm"
+                                  : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                              }`}
+                            >
+                              {type === "villa" ? t("villa", lang) :
+                               type === "apartment" ? t("apartment", lang) :
+                               type === "villa_floor" ? t("villaFloor", lang) :
+                               type === "chalet" ? t("chalet", lang) : type}
+                            </button>
+                          ))}
                         </>
                       )}
-                    </select>
+                    </div>
                   </div>
 
                   {/* Search Button */}

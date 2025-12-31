@@ -248,4 +248,18 @@ export const mockProperties: Property[] = [
       lng: 47.9794,
       areaInfo: AREAS.kuwaitCity,
     },
+    {
+      id: "18",
+      title: "Luxury Chalet in Salmiya",
+      location: "Salmiya, Kuwait",
+      price: 450,
+      bedrooms: 3,
+      bathrooms: 2,
+      area: 180,
+      image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&q=80",
+      type: "rent",
+      lat: 29.3333,
+      lng: 48.0833,
+      areaInfo: AREAS.salmiya,
+    },
 ]

@@ -39,7 +39,7 @@ function PropertiesPageContent() {
   const [searchType, setSearchType] = useState<"buy" | "rent">("buy")
   const [searchQuery, setSearchQuery] = useState("")
   const [maxPrice, setMaxPrice] = useState<number | null>(null)
-  const [propertyTypeFilter, setPropertyTypeFilter] = useState<string>("any")
+  const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([])
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | undefined>()
   const [hoveredPropertyId, setHoveredPropertyId] = useState<string | undefined>()
   const [mobileView, setMobileView] = useState<"map" | "list">("map")
@@ -102,14 +102,35 @@ function PropertiesPageContent() {
       setMaxPrice(null)
     }
 
-    const propertyTypeParam = searchParams.get("propertyType")
-    if (propertyTypeParam) {
-      const normalized = propertyTypeParam.toLowerCase()
-      if (normalized !== propertyTypeFilter) {
-        setPropertyTypeFilter(normalized)
+    // Read types param (new format: comma-separated)
+    const typesParam = searchParams.get("types")
+    if (typesParam) {
+      const typesArray = typesParam
+        .split(",")
+        .map((t) => t.trim().toLowerCase())
+        .filter((t) => t.length > 0)
+      
+      // Validate types against current buy/rent options
+      const buyTypes = ["villa", "apartment", "land", "tower", "chalet"]
+      const rentTypes = ["villa", "apartment", "villa_floor", "chalet"]
+      const validTypes = searchType === "buy" ? buyTypes : rentTypes
+      
+      const validSelected = typesArray.filter((t) => validTypes.includes(t))
+      if (validSelected.length > 0 && JSON.stringify(validSelected.sort()) !== JSON.stringify(selectedPropertyTypes.sort())) {
+        setSelectedPropertyTypes(validSelected)
       }
-    } else if (propertyTypeFilter !== "any") {
-      setPropertyTypeFilter("any")
+    } else {
+      // Backward compatibility: check old propertyType param
+      const propertyTypeParam = searchParams.get("propertyType")
+      if (propertyTypeParam) {
+        const normalized = propertyTypeParam.toLowerCase()
+        // Convert single value to array for backward compatibility
+        if (!selectedPropertyTypes.includes(normalized)) {
+          setSelectedPropertyTypes([normalized])
+        }
+      } else if (selectedPropertyTypes.length > 0) {
+        setSelectedPropertyTypes([])
+      }
     }
     didInitFromUrl.current = true
 
@@ -127,15 +148,16 @@ function PropertiesPageContent() {
       // Filter by maxPrice (if set)
       const matchesMaxPrice = maxPrice === null || property.price <= maxPrice
       
-      // Filter by propertyType (if not "any")
+      // Filter by propertyType (multi-select)
       // Since Property type doesn't have a propertyType field, we check title
       let matchesPropertyType = true
-      if (propertyTypeFilter !== "any") {
+      if (selectedPropertyTypes.length > 0) {
         const titleLower = property.title.toLowerCase()
-        // Normalize filter: replace underscores with spaces for matching
-        const filterNormalized = propertyTypeFilter.toLowerCase().replace(/_/g, " ")
-        // Check if title contains the property type word
-        matchesPropertyType = titleLower.includes(filterNormalized)
+        // Check if title contains any of the selected property types
+        matchesPropertyType = selectedPropertyTypes.some((type) => {
+          const typeNormalized = type.toLowerCase().replace(/_/g, " ")
+          return titleLower.includes(typeNormalized)
+        })
       }
       
       // Filter by governorates (if any selected)
@@ -170,7 +192,7 @@ function PropertiesPageContent() {
       
       return matchesType && matchesSearch && matchesMaxPrice && matchesPropertyType && matchesGovernorates && matchesAreas && matchesBeds && matchesBaths
     })
-  }, [searchType, searchQuery, maxPrice, propertyTypeFilter, selectedGovernorateIds, selectedAreaIds, bedsMin, bathsMin])
+  }, [searchType, searchQuery, maxPrice, selectedPropertyTypes, selectedGovernorateIds, selectedAreaIds, bedsMin, bathsMin])
 
   // Properties that are SAFE to send to the map
   const mappableProperties = useMemo(() => {
@@ -232,7 +254,7 @@ function PropertiesPageContent() {
     setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
-    setPropertyTypeFilter("any")
+    setSelectedPropertyTypes([])
     setBedsMin(null)
     setBathsMin(null)
   }, [])
@@ -248,7 +270,7 @@ function PropertiesPageContent() {
     setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
-    setPropertyTypeFilter("any")
+    setSelectedPropertyTypes([])
     setBedsMin(null)
     setBathsMin(null)
   }, [])
@@ -260,7 +282,7 @@ function PropertiesPageContent() {
     setSelectedGovernorateIds([])
     setSelectedAreaIds([])
     setMaxPrice(null)
-    setPropertyTypeFilter("any")
+    setSelectedPropertyTypes([])
     setBedsMin(null)
     setBathsMin(null)
     // Clear URL params by navigating to /properties
@@ -324,27 +346,29 @@ function PropertiesPageContent() {
   // Calculate active filters count
   const activeFilterCount = useMemo(() => {
     let count = 0
-    if (propertyTypeFilter !== "any" && propertyTypeFilter !== "") count++
+    if (selectedPropertyTypes.length > 0) count++
     if (selectedGovernorateIds.length > 0) count++
     if (selectedAreaIds.length > 0) count++
     if (bedsMin !== null) count++
     if (bathsMin !== null) count++
     if (maxPrice !== null) count++
     return count
-  }, [propertyTypeFilter, selectedGovernorateIds.length, selectedAreaIds.length, bedsMin, bathsMin, maxPrice])
+  }, [selectedPropertyTypes.length, selectedGovernorateIds.length, selectedAreaIds.length, bedsMin, bathsMin, maxPrice])
 
-  // Reset propertyTypeFilter if it becomes invalid when switching buy/rent
+  // Reset selectedPropertyTypes if they become invalid when switching buy/rent
   useEffect(() => {
-    if (propertyTypeFilter === "any") return
+    if (selectedPropertyTypes.length === 0) return
     
-    const buyTypes = ["villa", "apartment", "land", "tower"]
-    const rentTypes = ["villa", "apartment", "villa_floor"]
+    const buyTypes = ["villa", "apartment", "land", "tower", "chalet"]
+    const rentTypes = ["villa", "apartment", "villa_floor", "chalet"]
     const validTypes = searchType === "buy" ? buyTypes : rentTypes
     
-    if (!validTypes.includes(propertyTypeFilter)) {
-      setPropertyTypeFilter("any")
+    // Filter out invalid types
+    const validSelected = selectedPropertyTypes.filter((type) => validTypes.includes(type))
+    if (validSelected.length !== selectedPropertyTypes.length) {
+      setSelectedPropertyTypes(validSelected)
     }
-  }, [searchType, propertyTypeFilter])
+  }, [searchType, selectedPropertyTypes])
 
   // SAFE selected property for map flyTo
   const selectedProperty = useMemo(() => {
@@ -473,32 +497,84 @@ function PropertiesPageContent() {
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto px-4 py-4">
-              {/* Property Type Selection */}
+              {/* Property Type Selection (Multi-select Chips) */}
               <div className="mb-6">
                 <h3 className={`text-sm font-semibold text-slate-900 mb-3 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("propertyTypeLabel", lang)}</h3>
-                <select
-                  value={propertyTypeFilter}
-                  onChange={(e) => setPropertyTypeFilter(e.target.value)}
-                  className={`flex h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-base text-slate-900 focus:outline-none focus:ring-2 focus:ring-primary-200 focus:border-primary-500 transition-all duration-200 ${
-                    lang === "ar" ? "text-right" : "text-left"
-                  }`}
-                >
-                  <option value="any">{t("any", lang)}</option>
+                <div className="flex flex-wrap gap-2">
+                  {/* "Any" chip */}
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPropertyTypes([])}
+                    className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                      selectedPropertyTypes.length === 0
+                        ? "bg-primary-600 text-white shadow-sm"
+                        : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                    }`}
+                  >
+                    {t("any", lang)}
+                  </button>
+                  {/* Property type chips */}
                   {searchType === "buy" ? (
                     <>
-                      <option value="villa">{t("villa", lang)}</option>
-                      <option value="apartment">{t("apartment", lang)}</option>
-                      <option value="land">{t("land", lang)}</option>
-                      <option value="tower">{t("tower", lang)}</option>
+                      {["villa", "apartment", "land", "tower", "chalet"].map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => {
+                            if (selectedPropertyTypes.includes(type)) {
+                              // Deselect
+                              const newTypes = selectedPropertyTypes.filter((t) => t !== type)
+                              setSelectedPropertyTypes(newTypes)
+                            } else {
+                              // Select (automatically deselects "Any")
+                              setSelectedPropertyTypes([...selectedPropertyTypes, type])
+                            }
+                          }}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                            selectedPropertyTypes.includes(type)
+                              ? "bg-primary-600 text-white shadow-sm"
+                              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          }`}
+                        >
+                          {type === "villa" ? t("villa", lang) :
+                           type === "apartment" ? t("apartment", lang) :
+                           type === "land" ? t("land", lang) :
+                           type === "tower" ? t("tower", lang) :
+                           type === "chalet" ? t("chalet", lang) : type}
+                        </button>
+                      ))}
                     </>
                   ) : (
                     <>
-                      <option value="villa">{t("villa", lang)}</option>
-                      <option value="apartment">{t("apartment", lang)}</option>
-                      <option value="villa_floor">{t("villaFloor", lang)}</option>
+                      {["villa", "apartment", "villa_floor", "chalet"].map((type) => (
+                        <button
+                          key={type}
+                          type="button"
+                          onClick={() => {
+                            if (selectedPropertyTypes.includes(type)) {
+                              // Deselect
+                              const newTypes = selectedPropertyTypes.filter((t) => t !== type)
+                              setSelectedPropertyTypes(newTypes)
+                            } else {
+                              // Select (automatically deselects "Any")
+                              setSelectedPropertyTypes([...selectedPropertyTypes, type])
+                            }
+                          }}
+                          className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                            selectedPropertyTypes.includes(type)
+                              ? "bg-primary-600 text-white shadow-sm"
+                              : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                          }`}
+                        >
+                          {type === "villa" ? t("villa", lang) :
+                           type === "apartment" ? t("apartment", lang) :
+                           type === "villa_floor" ? t("villaFloor", lang) :
+                           type === "chalet" ? t("chalet", lang) : type}
+                        </button>
+                      ))}
                     </>
                   )}
-                </select>
+                </div>
               </div>
 
               {/* Governorate Selection (Multi-select) */}
@@ -648,9 +724,7 @@ function PropertiesPageContent() {
                           {t("noPropertiesFound", lang)}
                         </h3>
                         <p className="text-sm text-slate-600">
-                          {searchQuery
-                            ? `${t("noResultsFor", lang)} "${searchQuery}" ${searchType === "buy" ? t("inBuy", lang) : t("inRent", lang)}`
-                            : `No ${searchType === "buy" ? "properties for sale" : "rental properties"} match your filters`}
+                          {t("noPropertiesFoundSubtitle", lang)}
                         </p>
                       </div>
                       <div className="flex flex-col gap-3 w-full max-w-xs">
@@ -799,7 +873,7 @@ function PropertiesPageContent() {
                           {filteredProperties.length} {filteredProperties.length === 1 ? t("propertyFound", lang) : t("propertiesFound", lang)}
                         </p>
                       </div>
-                      <div className="px-3 pt-2 pb-4 space-y-3">
+                      <div className="px-3 pt-2 pb-4 space-y-2">
                   {filteredProperties.map((property) => (
                     <div
                       key={property.id}

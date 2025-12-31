@@ -59,7 +59,7 @@ export default function ListingCard({
 
   const cardContent = (
     <Card className="overflow-hidden hover:shadow-soft-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer h-full md:h-auto">
-      <div className="relative h-48 md:h-64 w-full">
+      <div className="relative h-36 md:h-64 w-full">
         <Image
           src={image}
           alt={displayTitle}
@@ -73,11 +73,11 @@ export default function ListingCard({
           </span>
         </div>
       </div>
-      <CardContent className="p-4 md:p-6">
-        <h3 className="font-semibold text-base md:text-lg mb-2 line-clamp-1 text-slate-900 leading-[1.3]">
+      <CardContent className="p-3 md:p-6">
+        <h3 className="font-semibold text-sm md:text-lg mb-1.5 md:mb-2 line-clamp-1 text-slate-900 leading-[1.3]">
           {displayTitle}
         </h3>
-        <div className="mb-4">
+        <div className="mb-3 md:mb-4">
           <p className="text-sm text-slate-600 leading-[1.5]">{displayLocation}</p>
           {!isValidLatLng(lat, lng) && (
             <p className="text-xs text-slate-500 mt-1 italic">
@@ -85,17 +85,17 @@ export default function ListingCard({
             </p>
           )}
         </div>
-        <div className={`flex items-center justify-between mb-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+        <div className={`flex items-center justify-between mb-3 md:mb-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
           {lang === "ar" ? (
-            <span className="text-xl font-bold text-primary-600 tabular-nums" dir="ltr">{formattedPrice}</span>
+            <span className="text-lg md:text-xl font-bold text-primary-600 tabular-nums" dir="ltr">{formattedPrice}</span>
           ) : (
-            <span className="text-xl font-bold text-primary-600 tabular-nums">{formattedPrice}</span>
+            <span className="text-lg md:text-xl font-bold text-primary-600 tabular-nums">{formattedPrice}</span>
           )}
           {type === "rent" && (
-            <span className="text-sm text-slate-600">{t("month", lang)}</span>
+            <span className="text-xs md:text-sm text-slate-600">{t("month", lang)}</span>
           )}
         </div>
-        <div className="flex items-center gap-5 text-sm text-slate-600 leading-[1.5]">
+        <div className="flex items-center gap-4 md:gap-5 text-xs md:text-sm text-slate-600 leading-[1.5]">
           <div className="flex items-center gap-1">
             <Bed className="h-4 w-4" />
             {lang === "ar" ? (

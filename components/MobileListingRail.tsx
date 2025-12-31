@@ -74,7 +74,7 @@ export default function MobileListingRail({
               onClick={() => onSelect(property.id)}
               className={`
                 snap-start
-                flex-shrink-0 w-[200px]
+                flex-shrink-0 w-[170px]
                 bg-white rounded-xl
                 shadow-md
                 overflow-hidden
@@ -88,7 +88,7 @@ export default function MobileListingRail({
               `}
             >
               {/* Image */}
-              <div className="relative h-[60px] w-full">
+              <div className="relative h-[50px] w-full">
                 <Image
                   src={property.image}
                   alt={property.title}
@@ -108,8 +108,8 @@ export default function MobileListingRail({
               </div>
 
               {/* Content */}
-              <div className="p-2 space-y-0.5">
-                <p className="text-xs font-semibold text-slate-900 truncate leading-tight">
+              <div className="p-1.5 space-y-0.5">
+                <p className="text-[11px] font-semibold text-slate-900 line-clamp-1 leading-tight">
                   {property.title}
                 </p>
                 <div>
@@ -122,9 +122,9 @@ export default function MobileListingRail({
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-between mt-1">
+                <div className="flex items-center justify-between mt-0.5">
                   {lang === "ar" ? (
-                    <p className="text-xs font-bold text-primary-600 tabular-nums" dir="ltr">
+                    <p className="text-[11px] font-bold text-primary-600 tabular-nums" dir="ltr">
                       {new Intl.NumberFormat("en-KW", {
                         style: "currency",
                         currency: "KWD",
@@ -132,7 +132,7 @@ export default function MobileListingRail({
                       }).format(property.price)}
                     </p>
                   ) : (
-                    <p className="text-xs font-bold text-primary-600 tabular-nums">
+                    <p className="text-[11px] font-bold text-primary-600 tabular-nums">
                       {new Intl.NumberFormat("en-KW", {
                         style: "currency",
                         currency: "KWD",
