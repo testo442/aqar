@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import PropertyCard from "@/components/PropertyCard"
 import SearchToggle from "@/components/SearchToggle"
+import AreaAutocomplete from "@/components/AreaAutocomplete"
 import { useLanguage } from "@/app/providers"
 import { t } from "@/lib/translations"
 
@@ -177,7 +178,7 @@ export default function Home() {
                     }`}
                     aria-label="Switch to Arabic"
                   >
-                    {lang === "ar" ? "عربي" : "AR"}
+                    عربي
                   </button>
                 </div>
               </div>
@@ -190,17 +191,16 @@ export default function Home() {
                     <label htmlFor="location" className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
                       {t("areaLabel", lang)}
                     </label>
-                    <div className="relative">
-                      <MapPin className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 ${lang === "ar" ? "right-4" : "left-4"}`} />
-                      <Input
-                        id="location"
-                        type="text"
-                        placeholder={t("locationPlaceholder", lang)}
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className={`${lang === "ar" ? "pr-12" : "pl-12"} h-14 text-base rounded-xl border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200`}
-                      />
-                    </div>
+                    <AreaAutocomplete
+                      id="location"
+                      value={location}
+                      onChange={setLocation}
+                      placeholder={t("locationPlaceholder", lang)}
+                      lang={lang}
+                      icon={<MapPin className="h-5 w-5 text-slate-400" />}
+                      iconPosition="left"
+                      className="h-14 text-base rounded-xl border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
+                    />
                   </div>
 
                   {/* Price Range */}

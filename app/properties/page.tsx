@@ -5,15 +5,16 @@ import { useSearchParams } from "next/navigation"
 import dynamic from "next/dynamic"
 import { Search, Filter, Map, List, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import SearchToggle from "@/components/SearchToggle"
 import ListingCard from "@/components/ListingCard"
 import MobileListingRail from "@/components/MobileListingRail"
+import AreaAutocomplete from "@/components/AreaAutocomplete"
 import { mockProperties } from "./data/properties"
 import { GOVERNORATES, getAreasForGovernorate } from "@/lib/governorates"
 import { useLanguage } from "@/app/providers"
 import { t } from "@/lib/translations"
 import { tText } from "@/lib/i18n"
+import { savePropertiesState, loadPropertiesState, clearPropertiesState } from "@/lib/properties-state"
 
 // Dynamically import MapView to avoid SSR issues with Leaflet
 const MapView = dynamic(() => import("@/components/MapView"), {
@@ -51,6 +52,54 @@ function PropertiesPageContent() {
 
   // Refs for scrolling listings into view
   const listingRefs = useRef<{ [key: string]: HTMLDivElement | null }>({})
+  const hasRestoredState = useRef(false)
+
+  // Restore state from sessionStorage on mount (before URL params initialization)
+  useEffect(() => {
+    if (hasRestoredState.current) return
+    
+    // Check if URL has explicit params (user came from home with search)
+    const hasUrlParams = searchParams.toString().length > 0
+    
+    // Only restore if no URL params (user navigated back from details page)
+    if (!hasUrlParams) {
+      const savedState = loadPropertiesState()
+      if (savedState) {
+        setSearchType(savedState.searchType)
+        setSearchQuery(savedState.searchQuery)
+        setMaxPrice(savedState.maxPrice)
+        setSelectedPropertyTypes(savedState.selectedPropertyTypes)
+        setSelectedGovernorateIds(savedState.selectedGovernorateIds)
+        setSelectedAreaIds(savedState.selectedAreaIds)
+        setBedsMin(savedState.bedsMin)
+        setBathsMin(savedState.bathsMin)
+        // Clear the saved state after restoring
+        clearPropertiesState()
+      }
+    }
+    
+    hasRestoredState.current = true
+  }, [searchParams])
+
+  // Save state to sessionStorage whenever it changes (debounced)
+  useEffect(() => {
+    if (!hasRestoredState.current) return // Don't save during initial restore
+    
+    const timeoutId = setTimeout(() => {
+      savePropertiesState({
+        searchType,
+        searchQuery,
+        maxPrice,
+        selectedPropertyTypes,
+        selectedGovernorateIds,
+        selectedAreaIds,
+        bedsMin,
+        bathsMin,
+      })
+    }, 500) // Debounce saves by 500ms
+
+    return () => clearTimeout(timeoutId)
+  }, [searchType, searchQuery, maxPrice, selectedPropertyTypes, selectedGovernorateIds, selectedAreaIds, bedsMin, bathsMin])
 
   // Prevent body scroll when filters modal is open (mobile only)
   useEffect(() => {
@@ -72,69 +121,76 @@ function PropertiesPageContent() {
   }, [showFilters])
 
   // Initialize state from URL params (only when params differ to avoid loops)
+  // URL params override restored state when present
   useEffect(() => {
     if (didInitFromUrl.current) return
 
-    const typeParam = searchParams.get("type")
-    if (typeParam === "buy" || typeParam === "rent") {
-      if (typeParam !== searchType) {
-        setSearchType(typeParam)
+    const hasUrlParams = searchParams.toString().length > 0
+    
+    // If URL params exist, they override restored state
+    if (hasUrlParams) {
+      const typeParam = searchParams.get("type")
+      if (typeParam === "buy" || typeParam === "rent") {
+        if (typeParam !== searchType) {
+          setSearchType(typeParam)
+        }
       }
-    }
 
-    const queryParam = searchParams.get("query")
-    const queryValue = queryParam ? queryParam.trim() : ""
-    if (queryValue) {
-      setSearchQuery(queryValue)
+      const queryParam = searchParams.get("query")
+      const queryValue = queryParam ? queryParam.trim() : ""
+      if (queryValue) {
+        setSearchQuery(queryValue)
+      }
+      
+
+      const maxPriceParam = searchParams.get("maxPrice")
+      if (maxPriceParam) {
+        const priceNum = Number(maxPriceParam)
+        if (!Number.isNaN(priceNum) && priceNum > 0) {
+
+          if (priceNum !== maxPrice) {
+            setMaxPrice(priceNum)
+          }
+        }
+      } else if (maxPrice !== null) {
+        setMaxPrice(null)
+      }
+
+      // Read types param (new format: comma-separated)
+      const typesParam = searchParams.get("types")
+      if (typesParam) {
+        const typesArray = typesParam
+          .split(",")
+          .map((t) => t.trim().toLowerCase())
+          .filter((t) => t.length > 0)
+        
+        // Validate types against current buy/rent options
+        const buyTypes = ["villa", "apartment", "land", "tower", "chalet"]
+        const rentTypes = ["villa", "apartment", "villa_floor", "chalet"]
+        const validTypes = searchType === "buy" ? buyTypes : rentTypes
+        
+        const validSelected = typesArray.filter((t) => validTypes.includes(t))
+        if (validSelected.length > 0 && JSON.stringify(validSelected.sort()) !== JSON.stringify(selectedPropertyTypes.sort())) {
+          setSelectedPropertyTypes(validSelected)
+        }
+      } else {
+        // Backward compatibility: check old propertyType param
+        const propertyTypeParam = searchParams.get("propertyType")
+        if (propertyTypeParam) {
+          const normalized = propertyTypeParam.toLowerCase()
+          // Convert single value to array for backward compatibility
+          if (!selectedPropertyTypes.includes(normalized)) {
+            setSelectedPropertyTypes([normalized])
+          }
+        } else if (selectedPropertyTypes.length > 0) {
+          setSelectedPropertyTypes([])
+        }
+      }
     }
     
-
-    const maxPriceParam = searchParams.get("maxPrice")
-    if (maxPriceParam) {
-      const priceNum = Number(maxPriceParam)
-      if (!Number.isNaN(priceNum) && priceNum > 0) {
-
-        if (priceNum !== maxPrice) {
-          setMaxPrice(priceNum)
-        }
-      }
-    } else if (maxPrice !== null) {
-      setMaxPrice(null)
-    }
-
-    // Read types param (new format: comma-separated)
-    const typesParam = searchParams.get("types")
-    if (typesParam) {
-      const typesArray = typesParam
-        .split(",")
-        .map((t) => t.trim().toLowerCase())
-        .filter((t) => t.length > 0)
-      
-      // Validate types against current buy/rent options
-      const buyTypes = ["villa", "apartment", "land", "tower", "chalet"]
-      const rentTypes = ["villa", "apartment", "villa_floor", "chalet"]
-      const validTypes = searchType === "buy" ? buyTypes : rentTypes
-      
-      const validSelected = typesArray.filter((t) => validTypes.includes(t))
-      if (validSelected.length > 0 && JSON.stringify(validSelected.sort()) !== JSON.stringify(selectedPropertyTypes.sort())) {
-        setSelectedPropertyTypes(validSelected)
-      }
-    } else {
-      // Backward compatibility: check old propertyType param
-      const propertyTypeParam = searchParams.get("propertyType")
-      if (propertyTypeParam) {
-        const normalized = propertyTypeParam.toLowerCase()
-        // Convert single value to array for backward compatibility
-        if (!selectedPropertyTypes.includes(normalized)) {
-          setSelectedPropertyTypes([normalized])
-        }
-      } else if (selectedPropertyTypes.length > 0) {
-        setSelectedPropertyTypes([])
-      }
-    }
     didInitFromUrl.current = true
 
-  }, [searchParams])
+  }, [searchParams, searchType, maxPrice, selectedPropertyTypes])
 
   // Filter properties based on search, governorate, area, maxPrice, and propertyType
   const filteredProperties = useMemo(() => {
@@ -436,16 +492,15 @@ function PropertiesPageContent() {
             {/* Search Controls */}
             <div className="flex flex-col md:flex-row gap-3">
               <div className="flex-1">
-                <div className="relative">
-                  <Search className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 ${lang === "ar" ? "right-3" : "left-3"}`} />
-                  <Input
-                    type="text"
-                    placeholder={t("searchByLocation", lang)}
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className={`${lang === "ar" ? "pr-10" : "pl-10"} h-11 rounded-xl`}
-                  />
-                </div>
+                <AreaAutocomplete
+                  value={searchQuery}
+                  onChange={setSearchQuery}
+                  placeholder={t("searchByLocation", lang)}
+                  lang={lang}
+                  icon={<Search className="h-5 w-5 text-slate-400" />}
+                  iconPosition="left"
+                  className="h-11 rounded-xl"
+                />
               </div>
               <div className="flex items-center gap-3">
                 <SearchToggle value={searchType} onChange={setSearchType} />

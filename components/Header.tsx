@@ -112,7 +112,7 @@ export default function Header() {
                   }`}
                   aria-label="Switch to Arabic"
                 >
-                  {lang === "ar" ? "عربي" : "AR"}
+                  عربي
                 </button>
               </div>
             )}
@@ -156,7 +156,7 @@ export default function Header() {
                   }`}
                   aria-label="Switch to Arabic"
                 >
-                  {lang === "ar" ? "عربي" : "AR"}
+                  عربي
                 </button>
               </div>
             )}

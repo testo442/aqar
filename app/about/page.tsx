@@ -1,25 +1,24 @@
+"use client"
+
 import Link from "next/link"
 import { Search, TrendingUp, Shield, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "About Aqarna | Kuwait Real Estate",
-  description: "Learn why Aqarna is your trusted partner for real estate in Kuwait.",
-}
+import { useLanguage } from "@/app/providers"
+import { t } from "@/lib/translations"
 
 export default function AboutPage() {
+  const { lang } = useLanguage()
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
       <section className="bg-white border-b border-slate-200 py-12 md:py-16">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className={`max-w-3xl mx-auto text-center ${lang === "ar" ? "text-right" : "text-left"}`}>
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4 tracking-tight">
-              Why Choose Aqarna?
+              {t("aboutTitle", lang)}
             </h1>
             <p className="text-lg md:text-xl text-slate-600 leading-relaxed">
-              Your trusted partner for real estate in Kuwait. We make finding your dream home simple and secure.
+              {t("aboutSubtitle", lang)}
             </p>
           </div>
         </div>
@@ -30,20 +29,20 @@ export default function AboutPage() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto">
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1">10,000+</div>
-              <div className="text-sm md:text-base text-slate-600 font-medium">Properties</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1" dir="ltr">10,000+</div>
+              <div className="text-sm md:text-base text-slate-600 font-medium">{t("aboutStatsProperties", lang)}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1">5,000+</div>
-              <div className="text-sm md:text-base text-slate-600 font-medium">Happy Customers</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1" dir="ltr">5,000+</div>
+              <div className="text-sm md:text-base text-slate-600 font-medium">{t("aboutStatsCustomers", lang)}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1">50+</div>
-              <div className="text-sm md:text-base text-slate-600 font-medium">Expert Agents</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1" dir="ltr">50+</div>
+              <div className="text-sm md:text-base text-slate-600 font-medium">{t("aboutStatsAgents", lang)}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1">24/7</div>
-              <div className="text-sm md:text-base text-slate-600 font-medium">Support</div>
+              <div className="text-3xl md:text-4xl font-bold text-primary-600 mb-1" dir="ltr">24/7</div>
+              <div className="text-sm md:text-base text-slate-600 font-medium">{t("aboutStatsSupport", lang)}</div>
             </div>
           </div>
         </div>
@@ -58,9 +57,9 @@ export default function AboutPage() {
                 <div className="bg-primary-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-soft">
                   <Search className="h-10 w-10 text-primary-600" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold mb-3 text-slate-900">Advanced Search</h3>
-                <p className="text-slate-600 leading-relaxed text-base md:text-lg">
-                  Powerful filters and detailed listings help you find exactly what you&apos;re looking for.
+                <h3 className={`text-xl md:text-2xl font-bold mb-3 text-slate-900 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("aboutFeature1Title", lang)}</h3>
+                <p className={`text-slate-600 leading-relaxed text-base md:text-lg ${lang === "ar" ? "text-right" : "text-left"}`}>
+                  {t("aboutFeature1Desc", lang)}
                 </p>
               </div>
 
@@ -68,9 +67,9 @@ export default function AboutPage() {
                 <div className="bg-primary-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-soft">
                   <TrendingUp className="h-10 w-10 text-primary-600" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold mb-3 text-slate-900">Market Insights</h3>
-                <p className="text-slate-600 leading-relaxed text-base md:text-lg">
-                  Real-time data and pricing trends to help you make informed decisions.
+                <h3 className={`text-xl md:text-2xl font-bold mb-3 text-slate-900 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("aboutFeature2Title", lang)}</h3>
+                <p className={`text-slate-600 leading-relaxed text-base md:text-lg ${lang === "ar" ? "text-right" : "text-left"}`}>
+                  {t("aboutFeature2Desc", lang)}
                 </p>
               </div>
 
@@ -78,55 +77,55 @@ export default function AboutPage() {
                 <div className="bg-primary-50 rounded-2xl w-20 h-20 flex items-center justify-center mx-auto mb-6 shadow-soft">
                   <Shield className="h-10 w-10 text-primary-600" />
                 </div>
-                <h3 className="text-xl md:text-2xl font-bold mb-3 text-slate-900">Trusted & Secure</h3>
-                <p className="text-slate-600 leading-relaxed text-base md:text-lg">
-                  Verified listings and secure transactions. Your peace of mind is our priority.
+                <h3 className={`text-xl md:text-2xl font-bold mb-3 text-slate-900 ${lang === "ar" ? "text-right" : "text-left"}`}>{t("aboutFeature3Title", lang)}</h3>
+                <p className={`text-slate-600 leading-relaxed text-base md:text-lg ${lang === "ar" ? "text-right" : "text-left"}`}>
+                  {t("aboutFeature3Desc", lang)}
                 </p>
               </div>
             </div>
 
             {/* How It Works */}
             <div className="mb-16">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8 text-center tracking-tight">
-                How It Works
+              <h2 className={`text-3xl md:text-4xl font-bold text-slate-900 mb-8 text-center tracking-tight ${lang === "ar" ? "text-right" : "text-left"}`}>
+                {t("aboutHowItWorks", lang)}
               </h2>
               <div className="space-y-6">
-                <div className="flex gap-4">
+                <div className={`flex gap-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
                   <div className="flex-shrink-0">
-                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold" dir="ltr">
                       1
                     </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">Search Properties</h3>
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{t("aboutStep1Title", lang)}</h3>
                     <p className="text-slate-600 leading-relaxed">
-                      Use our powerful search filters to find properties that match your criteria. Filter by location, price, type, and more.
+                      {t("aboutStep1Desc", lang)}
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-4">
+                <div className={`flex gap-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
                   <div className="flex-shrink-0">
-                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold" dir="ltr">
                       2
                     </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">Explore on Map</h3>
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{t("aboutStep2Title", lang)}</h3>
                     <p className="text-slate-600 leading-relaxed">
-                      View properties on an interactive map to see locations, neighborhoods, and nearby amenities.
+                      {t("aboutStep2Desc", lang)}
                     </p>
                   </div>
                 </div>
-                <div className="flex gap-4">
+                <div className={`flex gap-4 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
                   <div className="flex-shrink-0">
-                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                    <div className="bg-primary-600 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold" dir="ltr">
                       3
                     </div>
                   </div>
-                  <div>
-                    <h3 className="text-xl font-semibold text-slate-900 mb-2">Contact & View</h3>
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h3 className="text-xl font-semibold text-slate-900 mb-2">{t("aboutStep3Title", lang)}</h3>
                     <p className="text-slate-600 leading-relaxed">
-                      Get in touch with property owners or agents directly. Schedule viewings and ask questions.
+                      {t("aboutStep3Desc", lang)}
                     </p>
                   </div>
                 </div>
@@ -135,36 +134,36 @@ export default function AboutPage() {
 
             {/* Trust Points */}
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-8 text-center tracking-tight">
-                Why Trust Aqarna?
+              <h2 className={`text-3xl md:text-4xl font-bold text-slate-900 mb-8 text-center tracking-tight ${lang === "ar" ? "text-right" : "text-left"}`}>
+                {t("aboutTrustTitle", lang)}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Verified Listings</h4>
-                    <p className="text-sm text-slate-600">All properties are verified for accuracy and authenticity.</p>
+                <div className={`flex items-start gap-3 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+                  <CheckCircle className={`h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5 ${lang === "ar" ? "ml-3" : ""}`} />
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h4 className="font-semibold text-slate-900 mb-1">{t("aboutTrust1Title", lang)}</h4>
+                    <p className="text-sm text-slate-600">{t("aboutTrust1Desc", lang)}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Secure Platform</h4>
-                    <p className="text-sm text-slate-600">Your data and transactions are protected with industry-standard security.</p>
+                <div className={`flex items-start gap-3 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+                  <CheckCircle className={`h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5 ${lang === "ar" ? "ml-3" : ""}`} />
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h4 className="font-semibold text-slate-900 mb-1">{t("aboutTrust2Title", lang)}</h4>
+                    <p className="text-sm text-slate-600">{t("aboutTrust2Desc", lang)}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Expert Support</h4>
-                    <p className="text-sm text-slate-600">Our team is available 24/7 to help you find your perfect property.</p>
+                <div className={`flex items-start gap-3 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+                  <CheckCircle className={`h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5 ${lang === "ar" ? "ml-3" : ""}`} />
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h4 className="font-semibold text-slate-900 mb-1">{t("aboutTrust3Title", lang)}</h4>
+                    <p className="text-sm text-slate-600">{t("aboutTrust3Desc", lang)}</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-semibold text-slate-900 mb-1">Transparent Pricing</h4>
-                    <p className="text-sm text-slate-600">No hidden fees. Clear pricing information for every property.</p>
+                <div className={`flex items-start gap-3 ${lang === "ar" ? "flex-row-reverse" : ""}`}>
+                  <CheckCircle className={`h-6 w-6 text-primary-600 flex-shrink-0 mt-0.5 ${lang === "ar" ? "ml-3" : ""}`} />
+                  <div className={lang === "ar" ? "text-right" : "text-left"}>
+                    <h4 className="font-semibold text-slate-900 mb-1">{t("aboutTrust4Title", lang)}</h4>
+                    <p className="text-sm text-slate-600">{t("aboutTrust4Desc", lang)}</p>
                   </div>
                 </div>
               </div>
@@ -176,12 +175,12 @@ export default function AboutPage() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-gradient-to-br from-primary-600 to-primary-700 text-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className={`max-w-3xl mx-auto text-center ${lang === "ar" ? "text-right" : "text-left"}`}>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 tracking-tight">
-              Ready to Find Your Home?
+              {t("aboutCTATitle", lang)}
             </h2>
             <p className="text-xl md:text-2xl text-primary-50 mb-10 leading-[1.6]">
-              Join thousands of satisfied customers who found their perfect property with Aqarna.
+              {t("aboutCTASubtitle", lang)}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/properties">
@@ -190,7 +189,7 @@ export default function AboutPage() {
                   variant="outline"
                   className="bg-white text-primary-600 border-white hover:bg-primary-50 rounded-xl px-8 py-6 text-base font-semibold h-auto"
                 >
-                  Browse Properties
+                  {t("browseProperties", lang)}
                 </Button>
               </Link>
               <Link href="/sell">
@@ -198,7 +197,7 @@ export default function AboutPage() {
                   size="lg"
                   className="bg-white/10 text-white border-2 border-white hover:bg-white/20 rounded-xl px-8 py-6 text-base font-semibold h-auto"
                 >
-                  List Your Property
+                  {t("listYourProperty", lang)}
                 </Button>
               </Link>
             </div>

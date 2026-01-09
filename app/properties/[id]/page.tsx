@@ -9,6 +9,7 @@ import { useLanguage } from "@/app/providers"
 import { t } from "@/lib/translations"
 import { tText, formatNumberForRTL } from "@/lib/i18n"
 import { isValidLatLng } from "@/lib/geo"
+import { usePathname } from "next/navigation"
 
 interface PageProps {
   params: {
@@ -18,6 +19,7 @@ interface PageProps {
 
 export default function PropertyDetailsPage({ params }: PageProps) {
   const { lang } = useLanguage()
+  const pathname = usePathname()
   const property = mockProperties.find((p) => p.id === params.id)
 
   // Not found state
@@ -187,6 +189,27 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                   {t("whatsapp", lang)}
                 </a>
               </Button>
+            </div>
+            
+            {/* Accountability Links */}
+            <div className={`mt-4 pt-4 border-t border-slate-100 flex items-center gap-4 text-sm ${lang === "ar" ? "flex-row-reverse justify-end" : "justify-start"}`}>
+              <a
+                href={`mailto:support@aqarna.com?subject=${encodeURIComponent(t("mailtoReportSubject", lang))}&body=${encodeURIComponent(
+                  `${t("mailtoBodyIntro", lang)}\n\n${t("property", lang)}: ${tText(property.titleI18n, lang, property.title)}\n${t("propertyId", lang)}: ${property.id}\n${t("url", lang)}: ${typeof window !== "undefined" ? window.location.origin + pathname : ""}`
+                )}`}
+                className="text-slate-500 hover:text-primary-600 transition-colors"
+              >
+                {t("reportListing", lang)}
+              </a>
+              <span className="text-slate-300">•</span>
+              <a
+                href={`mailto:support@aqarna.com?subject=${encodeURIComponent(t("mailtoSuggestSubject", lang))}&body=${encodeURIComponent(
+                  `${t("mailtoBodyIntro", lang)}\n\n${t("property", lang)}: ${tText(property.titleI18n, lang, property.title)}\n${t("propertyId", lang)}: ${property.id}\n${t("url", lang)}: ${typeof window !== "undefined" ? window.location.origin + pathname : ""}`
+                )}`}
+                className="text-slate-500 hover:text-primary-600 transition-colors"
+              >
+                {t("suggestEdit", lang)}
+              </a>
             </div>
           </div>
         </div>

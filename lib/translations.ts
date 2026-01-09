@@ -94,7 +94,7 @@ export const translations: Record<string, I18nText> = {
   },
   any: {
     en: "Any",
-    ar: "أي",
+    ar: "الكل",
   },
   listYourProperty: {
     en: "List Your Property",
@@ -380,11 +380,11 @@ export const translations: Record<string, I18nText> = {
   },
   successTitle: {
     en: "Thank You!",
-    ar: "شكراً لك!",
+    ar: "تم الاستلام",
   },
   successMessage: {
     en: "We've received your property details. Our team will contact you shortly.",
-    ar: "لقد استلمنا تفاصيل عقارك. سيتواصل فريقنا معك قريباً.",
+    ar: "تم استلام تفاصيل عقارك، وسيتم التواصل معك قريبًا.",
   },
   errorMessage: {
     en: "Something went wrong. Please try again.",
@@ -469,6 +469,220 @@ export const translations: Record<string, I18nText> = {
   locationNotAvailable: {
     en: "Location not available",
     ar: "الموقع غير متوفر",
+  },
+  // About page translations
+  aboutTitle: {
+    en: "Why Choose Aqarna?",
+    ar: "لماذا تختار عقارنا؟",
+  },
+  aboutSubtitle: {
+    en: "Your trusted partner for real estate in Kuwait. We make finding your dream home simple and secure.",
+    ar: "شريكك الموثوق في العقارات في الكويت. نجعل العثور على منزل أحلامك بسيطاً وآمناً.",
+  },
+  aboutStatsProperties: {
+    en: "Properties",
+    ar: "عقار",
+  },
+  aboutStatsCustomers: {
+    en: "Happy Customers",
+    ar: "عميل سعيد",
+  },
+  aboutStatsAgents: {
+    en: "Expert Agents",
+    ar: "وكيل خبير",
+  },
+  aboutStatsSupport: {
+    en: "Support",
+    ar: "دعم",
+  },
+  aboutFeature1Title: {
+    en: "Advanced Search",
+    ar: "بحث متقدم",
+  },
+  aboutFeature1Desc: {
+    en: "Powerful filters and detailed listings help you find exactly what you're looking for.",
+    ar: "فلاتر قوية وقوائم مفصلة تساعدك في العثور على ما تبحث عنه بالضبط.",
+  },
+  aboutFeature2Title: {
+    en: "Market Insights",
+    ar: "رؤى السوق",
+  },
+  aboutFeature2Desc: {
+    en: "Real-time data and pricing trends to help you make informed decisions.",
+    ar: "بيانات في الوقت الفعلي واتجاهات الأسعار لمساعدتك في اتخاذ قرارات مدروسة.",
+  },
+  aboutFeature3Title: {
+    en: "Trusted & Secure",
+    ar: "موثوق وآمن",
+  },
+  aboutFeature3Desc: {
+    en: "Verified listings and secure transactions. Your peace of mind is our priority.",
+    ar: "قوائم موثقة ومعاملات آمنة. راحة بالك هي أولويتنا.",
+  },
+  aboutHowItWorks: {
+    en: "How It Works",
+    ar: "كيف يعمل",
+  },
+  aboutStep1Title: {
+    en: "Search Properties",
+    ar: "ابحث عن العقارات",
+  },
+  aboutStep1Desc: {
+    en: "Use our powerful search filters to find properties that match your criteria. Filter by location, price, type, and more.",
+    ar: "استخدم فلاتر البحث القوية للعثور على العقارات التي تطابق معاييرك. فلترة حسب الموقع والسعر والنوع والمزيد.",
+  },
+  aboutStep2Title: {
+    en: "Explore on Map",
+    ar: "استكشف على الخريطة",
+  },
+  aboutStep2Desc: {
+    en: "View properties on an interactive map to see locations, neighborhoods, and nearby amenities.",
+    ar: "اعرض العقارات على خريطة تفاعلية لرؤية المواقع والأحياء والمرافق القريبة.",
+  },
+  aboutStep3Title: {
+    en: "Contact & View",
+    ar: "تواصل وعرض",
+  },
+  aboutStep3Desc: {
+    en: "Get in touch with property owners or agents directly. Schedule viewings and ask questions.",
+    ar: "تواصل مع ملاك العقارات أو الوكلاء مباشرة. حدد مواعيد المشاهدة واطرح الأسئلة.",
+  },
+  aboutTrustTitle: {
+    en: "Why Trust Aqarna?",
+    ar: "لماذا تثق بعقارنا؟",
+  },
+  aboutTrust1Title: {
+    en: "Verified Listings",
+    ar: "قوائم موثقة",
+  },
+  aboutTrust1Desc: {
+    en: "All properties are verified for accuracy and authenticity.",
+    ar: "جميع العقارات موثقة للدقة والأصالة.",
+  },
+  aboutTrust2Title: {
+    en: "Secure Platform",
+    ar: "منصة آمنة",
+  },
+  aboutTrust2Desc: {
+    en: "Your data and transactions are protected with industry-standard security.",
+    ar: "بياناتك ومعاملاتك محمية بأمان معياري على مستوى الصناعة.",
+  },
+  aboutTrust3Title: {
+    en: "Expert Support",
+    ar: "دعم خبير",
+  },
+  aboutTrust3Desc: {
+    en: "Our team is available 24/7 to help you find your perfect property.",
+    ar: "فريقنا متاح على مدار الساعة لمساعدتك في العثور على عقارك المثالي.",
+  },
+  aboutTrust4Title: {
+    en: "Transparent Pricing",
+    ar: "أسعار شفافة",
+  },
+  aboutTrust4Desc: {
+    en: "No hidden fees. Clear pricing information for every property.",
+    ar: "لا توجد رسوم مخفية. معلومات أسعار واضحة لكل عقار.",
+  },
+  aboutCTATitle: {
+    en: "Ready to Find Your Home?",
+    ar: "هل أنت مستعد للعثور على منزلك؟",
+  },
+  aboutCTASubtitle: {
+    en: "Join thousands of satisfied customers who found their perfect property with Aqarna.",
+    ar: "انضم إلى آلاف العملاء الراضين الذين وجدوا عقارهم المثالي مع عقارنا.",
+  },
+  browseProperties: {
+    en: "Browse Properties",
+    ar: "تصفح العقارات",
+  },
+  // Footer
+  privacyLink: {
+    en: "Privacy Policy",
+    ar: "سياسة الخصوصية",
+  },
+  termsLink: {
+    en: "Terms",
+    ar: "الشروط والأحكام",
+  },
+  contactLink: {
+    en: "Contact",
+    ar: "تواصل معنا",
+  },
+  copyright: {
+    en: "© {year} Aqarna",
+    ar: "© {year} أقرنة",
+  },
+  // Privacy page
+  privacyTitle: {
+    en: "Privacy Policy",
+    ar: "سياسة الخصوصية",
+  },
+  privacyContent1: {
+    en: "We respect your privacy. Information you submit is used only to respond to your inquiry or listing request.",
+    ar: "نحترم خصوصيتك. تُستخدم المعلومات التي ترسلها فقط للرد على طلبك أو طلب عرض العقار.",
+  },
+  privacyContent2: {
+    en: "We do not sell your personal data.",
+    ar: "لا نقوم ببيع بياناتك الشخصية.",
+  },
+  // Terms page
+  termsTitle: {
+    en: "Terms",
+    ar: "الشروط والأحكام",
+  },
+  termsContent1: {
+    en: "Aqarna provides property information for browsing. Listings may change and should be verified.",
+    ar: "توفّر أقرنة معلومات عقارية للتصفح. قد تتغير البيانات ويجب التحقق منها.",
+  },
+  termsContent2: {
+    en: "By using the site, you agree not to misuse the service.",
+    ar: "باستخدامك للموقع، أنت توافق على عدم إساءة استخدام الخدمة.",
+  },
+  // Contact page
+  contactTitle: {
+    en: "Contact",
+    ar: "تواصل معنا",
+  },
+  contactContent: {
+    en: "For support or inquiries, contact us:",
+    ar: "للدعم أو الاستفسارات، تواصل معنا:",
+  },
+  contactEmail: {
+    en: "Email: support@aqarna.com",
+    ar: "البريد الإلكتروني: support@aqarna.com",
+  },
+  // Property details accountability links
+  reportListing: {
+    en: "Report this listing",
+    ar: "الإبلاغ عن هذا العقار",
+  },
+  suggestEdit: {
+    en: "Suggest an edit",
+    ar: "اقتراح تعديل",
+  },
+  mailtoReportSubject: {
+    en: "Aqarna: Report listing",
+    ar: "أقرنة: الإبلاغ عن عقار",
+  },
+  mailtoSuggestSubject: {
+    en: "Aqarna: Suggest edit",
+    ar: "أقرنة: اقتراح تعديل",
+  },
+  mailtoBodyIntro: {
+    en: "Please provide details below:",
+    ar: "يرجى تقديم التفاصيل أدناه:",
+  },
+  property: {
+    en: "Property",
+    ar: "العقار",
+  },
+  propertyId: {
+    en: "Property ID",
+    ar: "معرف العقار",
+  },
+  url: {
+    en: "URL",
+    ar: "الرابط",
   },
 }
 
