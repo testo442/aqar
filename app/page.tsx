@@ -138,7 +138,7 @@ export default function Home() {
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative bg-white overflow-hidden">
-        <div className="relative container mx-auto px-4 py-12 md:py-20">
+        <div className="relative container mx-auto px-4 pt-8 md:pt-12 pb-12 md:pb-20">
           <div className="max-w-5xl mx-auto">
             {/* Headline */}
             <div className={`text-center mb-8 md:mb-10 ${lang === "ar" ? "text-right" : "text-left"}`}>

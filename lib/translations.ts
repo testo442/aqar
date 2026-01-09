@@ -61,11 +61,11 @@ export const translations: Record<string, I18nText> = {
 
   // Homepage
   homeTitle: {
-    en: "Real Estate in Kuwait",
+    en: "Find property anywhere in Kuwait",
     ar: "العقارات في الكويت",
   },
   homeSubtitle: {
-    en: "Find your perfect home. Buy or rent properties across Kuwait with confidence.",
+    en: "Search apartments, villas, and land for sale or rent in seconds.",
     ar: "ابحث عن منزلك المثالي. اشترِ أو استأجر عقارات في جميع أنحاء الكويت بثقة.",
   },
   searchPlaceholder: {
