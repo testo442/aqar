@@ -11,6 +11,7 @@ import MobileListingRail from "@/components/MobileListingRail"
 import AreaAutocomplete from "@/components/AreaAutocomplete"
 import { mockProperties } from "./data/properties"
 import { GOVERNORATES, getAreasForGovernorate } from "@/lib/governorates"
+import { AREAS } from "@/lib/areas"
 import { useLanguage } from "@/app/providers"
 import { t } from "@/lib/translations"
 import { tText } from "@/lib/i18n"
@@ -186,11 +187,29 @@ function PropertiesPageContent() {
           setSelectedPropertyTypes([])
         }
       }
+
+      // Read areas param (comma-separated area IDs)
+      const areasParam = searchParams.get("areas")
+      if (areasParam) {
+        const areaIdsArray = areasParam
+          .split(",")
+          .map((id) => id.trim())
+          .filter((id) => id.length > 0)
+        
+        // Validate area IDs exist in AREAS dataset
+        const validAreaIds = areaIdsArray.filter((id) => AREAS[id] !== undefined)
+        
+        if (validAreaIds.length > 0 && JSON.stringify(validAreaIds.sort()) !== JSON.stringify(selectedAreaIds.sort())) {
+          setSelectedAreaIds(validAreaIds)
+        }
+      } else if (selectedAreaIds.length > 0) {
+        setSelectedAreaIds([])
+      }
     }
     
     didInitFromUrl.current = true
 
-  }, [searchParams, searchType, maxPrice, selectedPropertyTypes])
+  }, [searchParams, searchType, maxPrice, selectedPropertyTypes, selectedAreaIds])
 
   // Filter properties based on search, governorate, area, maxPrice, and propertyType
   const filteredProperties = useMemo(() => {

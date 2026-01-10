@@ -27,8 +27,8 @@ export const translations: Record<string, I18nText> = {
     ar: "اعرض عقارك",
   },
   viewAll: {
-    en: "View all properties",
-    ar: "عرض جميع العقارات",
+    en: "View all properties on the map",
+    ar: "عرض جميع العقارات على الخريطة",
   },
   back: {
     en: "Back",
@@ -73,8 +73,8 @@ export const translations: Record<string, I18nText> = {
     ar: "ابحث عن عقارات، مواقع...",
   },
   locationPlaceholder: {
-    en: "Enter city, area, or neighborhood",
-    ar: "أدخل المدينة أو المنطقة أو الحي",
+    en: "Search by city, area, or governorate",
+    ar: "ابحث حسب المدينة أو المنطقة أو المحافظة",
   },
   maxPrice: {
     en: "Max Price",
@@ -85,8 +85,8 @@ export const translations: Record<string, I18nText> = {
     ar: "الحد الأقصى للإيجار",
   },
   anyPrice: {
-    en: "Any price",
-    ar: "أي سعر",
+    en: "Price",
+    ar: "السعر",
   },
   propertyType: {
     en: "Type",
@@ -179,8 +179,8 @@ export const translations: Record<string, I18nText> = {
     ar: "مسح الفلاتر",
   },
   showAllProperties: {
-    en: "Show all properties",
-    ar: "عرض جميع العقارات",
+    en: "Show all properties on the map",
+    ar: "عرض جميع العقارات على الخريطة",
   },
   noResultsFor: {
     en: "No results for",

@@ -3,12 +3,12 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Search, MapPin, DollarSign, Zap, Shield, Map } from "lucide-react"
+import { Search, DollarSign, Zap, Shield, Map } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import PropertyCard from "@/components/PropertyCard"
 import SearchToggle from "@/components/SearchToggle"
-import AreaAutocomplete from "@/components/AreaAutocomplete"
+import AreaMultiSelect from "@/components/AreaMultiSelect"
 import { useLanguage } from "@/app/providers"
 import { t } from "@/lib/translations"
 
@@ -86,9 +86,9 @@ export default function Home() {
   const router = useRouter()
   const { lang, setLang } = useLanguage()
   const [searchType, setSearchType] = useState<"buy" | "rent">("buy")
-  const [location, setLocation] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
   const [selectedPropertyTypes, setSelectedPropertyTypes] = useState<string[]>([])
+  const [selectedAreaIds, setSelectedAreaIds] = useState<string[]>([])
 
   // Clean up invalid types when switching buy/rent
   useEffect(() => {
@@ -113,12 +113,6 @@ export default function Home() {
     // Add type (required)
     params.set("type", searchType)
     
-    // Add query (location) if provided
-    const trimmedLocation = location.trim()
-    if (trimmedLocation) {
-      params.set("query", trimmedLocation)
-    }
-    
     // Add maxPrice if provided
     const priceValue = maxPrice.trim()
     if (priceValue && !isNaN(Number(priceValue)) && Number(priceValue) > 0) {
@@ -128,6 +122,11 @@ export default function Home() {
     // Add types if any selected (comma-separated)
     if (selectedPropertyTypes.length > 0) {
       params.set("types", selectedPropertyTypes.join(","))
+    }
+    
+    // Add areas if any selected (comma-separated)
+    if (selectedAreaIds.length > 0) {
+      params.set("areas", selectedAreaIds.join(","))
     }
     
     // Navigate to /properties with query params
@@ -186,27 +185,27 @@ export default function Home() {
               {/* Search Form */}
               <form className="space-y-4" onSubmit={handleSearch}>
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
-                  {/* Location Input */}
+                  {/* Area Multi-Select */}
                   <div className="md:col-span-5">
-                    <label htmlFor="location" className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
+                    <label htmlFor="areas" className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
                       {t("areaLabel", lang)}
                     </label>
-                    <AreaAutocomplete
-                      id="location"
-                      value={location}
-                      onChange={setLocation}
+                    <AreaMultiSelect
+                      id="areas"
+                      selectedAreaIds={selectedAreaIds}
+                      onChange={setSelectedAreaIds}
                       placeholder={t("locationPlaceholder", lang)}
                       lang={lang}
-                      icon={<MapPin className="h-5 w-5 text-slate-400" />}
-                      iconPosition="left"
-                      className="h-14 text-base rounded-xl border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
                     />
                   </div>
 
                   {/* Price Range */}
                   <div className="md:col-span-3">
                     <label htmlFor="price" className={`block text-xs font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                      {searchType === "buy" ? t("maxPrice", lang) : t("maxRent", lang)}
+                      {searchType === "buy" ? t("maxPrice", lang) : t("maxRent", lang)}{" "}
+                      <span className="text-xs text-slate-400 font-normal">
+                        {lang === "ar" ? "(اختياري)" : "(optional)"}
+                      </span>
                     </label>
                     <div className="relative">
                       <DollarSign className={`absolute top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400 ${lang === "ar" ? "right-4" : "left-4"}`} />
