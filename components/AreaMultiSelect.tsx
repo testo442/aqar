@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, useMemo } from "react"
 import { MapPin, X, ChevronDown } from "lucide-react"
-import { AREAS } from "@/lib/areas"
+import { getAllAreas } from "@/lib/governorates"
 import { tText } from "@/lib/i18n"
 import { t } from "@/lib/translations"
 import type { Area } from "@/lib/areas"
@@ -31,8 +31,9 @@ export default function AreaMultiSelect({
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
-  // Get all areas as an array (memoized)
-  const allAreas = useMemo(() => Object.values(AREAS), [])
+  // Get all areas from canonical dataset (memoized)
+  // Uses GOVERNORATES.flatMap to ensure complete list from canonical source
+  const allAreas = useMemo(() => getAllAreas(), [])
 
   // Get selected areas
   const selectedAreas = useMemo(() => {
@@ -243,8 +244,8 @@ export default function AreaMultiSelect({
           }`}
         >
           {availableAreas.length > 0 ? (
-            <div ref={listRef} className="max-h-64 overflow-y-auto">
-              {availableAreas.slice(0, 8).map((area, index) => {
+            <div ref={listRef} className="max-h-64 overflow-y-auto pb-2">
+              {availableAreas.map((area, index) => {
                 const displayName = lang === "en" ? area.en : area.ar
                 return (
                   <button
