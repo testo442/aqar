@@ -38,19 +38,19 @@
 @layer base {
   :root {
     /* Professional Blue Color System */
-    --primary: 37 92% 50%;
+    --primary: 224 66% 50%;
     --primary-foreground: 0 0% 100%;
     
     /* Background & Surface Colors */
-    --background: 0 0% 100%;
+    --background: 45 18% 96%;
     --foreground: 222 47% 11%;
     
     /* Card Colors */
-    --card: 0 0% 100%;
+    --card: 40 47% 97%;
     --card-foreground: 222 47% 11%;
     
     /* Popover Colors */
-    --popover: 0 0% 100%;
+    --popover: 40 47% 97%;
     --popover-foreground: 222 47% 11%;
     
     /* Secondary Colors */
@@ -58,7 +58,7 @@
     --secondary-foreground: 222 47% 11%;
     
     /* Muted Colors */
-    --muted: 210 40% 96%;
+    --muted: 45 15% 94%;
     --muted-foreground: 215 16% 47%;
     
     /* Accent Colors */
@@ -70,9 +70,9 @@
     --destructive-foreground: 0 0% 100%;
     
     /* Border & Input Colors */
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 217 91% 50%;
+    --border: 45 15% 88%;
+    --input: 45 15% 88%;
+    --ring: 224 66% 50%;
     
     /* Border Radius */
     --radius: 0.75rem;

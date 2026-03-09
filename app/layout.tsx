@@ -4,8 +4,9 @@ import { Inter } from 'next/font/google'
 import { cookies } from 'next/headers'
 import { LanguageProvider } from './providers'
 import { HtmlAttributes } from './html-attributes'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
+// Old V1 Header/Footer kept but no longer rendered (V2 pages use AppHeader + BottomNav)
+// import Header from '@/components/Header'
+// import Footer from '@/components/Footer'
 
 const inter = Inter({
   subsets: ['latin'],
@@ -34,9 +35,7 @@ export default async function RootLayout({
       <body className={`${inter.variable} font-sans antialiased`}>
         <LanguageProvider initialLang={initialLang}>
           <HtmlAttributes />
-          <Header />
           {children}
-          <Footer />
         </LanguageProvider>
       </body>
     </html>

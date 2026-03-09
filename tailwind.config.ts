@@ -17,12 +17,12 @@ const config: Config = {
           200: "#BFDBFE",
           300: "#93C5FD",
           400: "#60A5FA",
-          500: "#3B82F6",
-          600: "#2563EB", // DEFAULT PRIMARY - WCAG AA compliant
-          700: "#1D4ED8",
+          500: "#3D78E0",
+          600: "#2E56D4", // DEFAULT PRIMARY - warmer, WCAG AA
+          700: "#2248BA",
           800: "#1E40AF", // Secondary blue
           900: "#1E3A8A",
-          DEFAULT: "#2563EB",
+          DEFAULT: "#2E56D4",
           foreground: "#FFFFFF",
         },
         // Professional Neutral System (Slate)
@@ -52,7 +52,7 @@ const config: Config = {
           900: "#0F172A",
         },
         // Semantic colors
-        background: "#FFFFFF",
+        background: "#F6F5F2",
         foreground: "#0F172A",
         secondary: {
           DEFAULT: "#F1F5F9",
@@ -63,18 +63,18 @@ const config: Config = {
           foreground: "#0F172A",
         },
         muted: {
-          DEFAULT: "#F1F5F9",
+          DEFAULT: "#F1F0EC",
           foreground: "#64748B",
         },
-        border: "#E2E8F0",
-        input: "#E2E8F0",
-        ring: "#2563EB",
+        border: "#E6E4DD",
+        input: "#E6E4DD",
+        ring: "#2E56D4",
         destructive: {
           DEFAULT: "#EF4444",
           foreground: "#FFFFFF",
         },
         card: {
-          DEFAULT: "#FFFFFF",
+          DEFAULT: "#FAF8F3",
           foreground: "#0F172A",
         },
       },

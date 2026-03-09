@@ -15,11 +15,9 @@ export default function Header() {
   const isPropertiesPage = pathname?.startsWith("/properties") ?? false
   const { lang, setLang } = useLanguage()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  
+
   // Determine RTL from language or document direction
   const isRTL = lang === "ar" || (typeof document !== "undefined" && document.documentElement.dir === "rtl")
-
-  // Backdrop click handled inline in JSX, no need for separate handler
 
   // Close menu on Esc key
   useEffect(() => {
@@ -39,6 +37,9 @@ export default function Header() {
   useEffect(() => {
     setIsMenuOpen(false)
   }, [pathname])
+
+  // Old header is no longer rendered — V2 pages use AppHeader
+  if (pathname?.startsWith("/ui-v2")) return null
 
   return (
     <>

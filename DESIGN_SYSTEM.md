@@ -1,3 +1,54 @@
+# UI V2 Direction (Premium Map-First)
+
+## Goal
+Move from the current form-heavy homepage to a premium, app-like layout inspired by the concept mock — but refined to feel world-class (Rightmove/Zillow quality), not “AI generated”.
+
+## Non-negotiables (anti-AI look)
+- No playful/cartoon gradients or random glow.
+- No excessive blur, no exaggerated shadows.
+- Consistent spacing rhythm and component radii.
+- Limited color usage: primary blue only for CTAs + selected states.
+- Clean typography hierarchy with Inter (already defined).
+
+## Page layout (Home V2)
+Home V2 is composed of:
+1) **Header**: Logo + language dropdown + hamburger
+2) **Search row**: Search input with a right-side “Filter” button
+3) **Mode toggle**: Buy / Rent segmented control
+4) **Selected location chip row** (optional): e.g. “Khiran”
+5) **Map preview card**: preview image/placeholder + price pills + “Open Map”
+6) **Popular / Featured section**: listing cards (real estate, not hotels)
+7) **Mobile bottom nav**: Home / Map / Listings / Apply
+
+## Component rules (must become reusable components)
+Create components (names can vary, but structure must exist):
+- `AppHeader`
+- `SearchBar` (with Filter button)
+- `SegmentedControl` (Buy/Rent)
+- `Chip` / `ChipRow`
+- `MapPreviewCard`
+- `ListingCard`
+- `BottomNav`
+
+## Real-estate copy rules (avoid travel/hotel vibe)
+- Replace “per night” language with real estate pricing:
+  - Rent: “KD / month”
+  - Sale: “KD” (or “KD total”)
+- Replace star-ratings with trust signals more typical for property:
+  - Badges like “Verified”, “New”, “Featured”
+  - Optional “Responds fast” later
+(If ratings exist, keep them subtle.)
+
+## Responsive behavior
+- Mobile-first.
+- Desktop: center with max-width container; keep the same component system.
+- BottomNav: mobile only (or collapses on desktop).
+
+## Implementation constraints (for Claude)
+- Build the new UI in a separate route first: `/ui-v2` (do not replace `/` yet).
+- No refactors across the app until `/ui-v2` matches the target direction.
+- Ask before edits on every file.
+- Keep map/data logic unchanged for the first pass; use placeholder data where needed.
 # Aqarna Design System
 
 A professional, production-ready design system for the Aqarna real estate platform. Built to Zillow/Rightmove standards with full accessibility compliance.
