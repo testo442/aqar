@@ -15,9 +15,11 @@ interface SearchBarProps {
   filterCount?: number
   /** Called when user selects an area suggestion */
   onSelectArea?: (area: Area) => void
+  /** Called when user presses Enter */
+  onSubmit?: () => void
 }
 
-export default function SearchBar({ value, onChange, onFilterClick, filterCount, onSelectArea }: SearchBarProps) {
+export default function SearchBar({ value, onChange, onFilterClick, filterCount, onSelectArea, onSubmit }: SearchBarProps) {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
   const placeholder = isRTL ? "المنطقة، المبنى، الشارع..." : "Area, building, street..."
@@ -55,6 +57,14 @@ export default function SearchBar({ value, onChange, onFilterClick, filterCount,
     onSelectArea?.(area)
   }
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      setFocused(false)
+      onSubmit?.()
+    }
+  }
+
   return (
     <div ref={wrapRef} className="relative">
       <div className={`${s.root} ${isRTL ? "flex-row-reverse" : ""}`}>
@@ -67,9 +77,11 @@ export default function SearchBar({ value, onChange, onFilterClick, filterCount,
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onFocus={() => setFocused(true)}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
           dir={isRTL ? "rtl" : "ltr"}
           className={s.input}
+          enterKeyHint="search"
         />
 
         <div className={isRTL ? s.filterWrapRTL : s.filterWrapLTR}>

@@ -15,6 +15,7 @@ import {
   listingsPage as lp,
 } from "@/components/v2/v2Styles"
 import { MOCK_LISTINGS } from "@/lib/mock-listings"
+import type { Area } from "@/lib/areas"
 
 type SortOption = "recommended" | "price-low" | "price-high" | "latest"
 
@@ -65,6 +66,11 @@ export default function ListingsV2Page() {
     baths: filters.baths,
     types: filters.types,
   }), [filters.maxPrice, filters.beds, filters.baths, filters.types])
+
+  // When user selects an area suggestion, set it as location filter
+  const handleSelectArea = (area: Area) => {
+    setSearch(isRTL ? area.ar : area.en)
+  }
 
   const removeFilter = (key: keyof ActiveFilters) => {
     setFilters((prev) => {
@@ -227,6 +233,7 @@ export default function ListingsV2Page() {
             onChange={setSearch}
             onFilterClick={() => setFilterOpen(true)}
             filterCount={filterCount || undefined}
+            onSelectArea={handleSelectArea}
           />
           <SegmentedControl value={segment} onChange={setSegment} />
         </div>

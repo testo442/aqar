@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import AppHeader from "@/components/v2/AppHeader"
 import SearchBar from "@/components/v2/SearchBar"
 import SegmentedControl, { type Segment } from "@/components/v2/SegmentedControl"
@@ -65,10 +66,19 @@ const LISTINGS: (MiniListingCardProps & { lat: number; lng: number })[] = [
 export default function UIV2Page() {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
+  const router = useRouter()
 
   const [segment, setSegment] = useState<Segment>("rent")
   const [search, setSearch] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
+
+  const navigateToMap = (query: string) => {
+    if (query.trim()) {
+      router.push(`/map?q=${encodeURIComponent(query.trim())}`)
+    } else {
+      router.push("/map")
+    }
+  }
 
   return (
     <div className={p.root} dir={isRTL ? "rtl" : "ltr"}>
@@ -84,6 +94,8 @@ export default function UIV2Page() {
               value={search}
               onChange={setSearch}
               onFilterClick={() => setFilterOpen(true)}
+              onSubmit={() => navigateToMap(search)}
+              onSelectArea={(area) => navigateToMap(isRTL ? area.ar : area.en)}
             />
             <SegmentedControl value={segment} onChange={setSegment} />
           </div>

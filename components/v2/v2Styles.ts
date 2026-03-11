@@ -201,21 +201,22 @@ export const mapPage = {
   controlsInner: "w-full max-w-[480px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 pt-2 pointer-events-auto space-y-2",
   // Map container
   mapWrap: "relative flex-1 w-full",
-  // Bottom results carousel — sits above bottom nav (h-14 + safe area + gap)
-  carouselWrap: "absolute bottom-20 left-0 right-0 z-20 pointer-events-none",
-  carouselRail: "flex gap-2.5 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto pb-2",
+  // Bottom results carousel — docked above bottom nav with gradient backdrop
+  carouselWrap: "absolute bottom-[4.5rem] left-0 right-0 z-20 pointer-events-none pb-safe",
+  carouselBg: "bg-gradient-to-t from-black/20 via-black/8 to-transparent pt-6 pb-2",
+  carouselRail: "flex gap-2 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto",
   // Individual result card in carousel
-  resultCard: "w-[260px] flex-shrink-0 snap-start bg-card rounded-2xl border border-border shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150",
-  resultCardActive: "w-[260px] flex-shrink-0 snap-start bg-card rounded-2xl border-[1.5px] border-primary-400 shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150 ring-1 ring-primary-300/40",
-  resultImage: "relative w-[88px] flex-shrink-0",
-  resultBody: "flex-1 px-2.5 py-2 space-y-0.5 min-w-0",
+  resultCard: "w-[240px] flex-shrink-0 snap-start bg-card rounded-xl border border-border shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150",
+  resultCardActive: "w-[240px] flex-shrink-0 snap-start bg-card rounded-xl border-[1.5px] border-primary-400 shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150 ring-1 ring-primary-300/40",
+  resultImage: "relative w-20 flex-shrink-0",
+  resultBody: "flex-1 px-2 py-1.5 space-y-0.5 min-w-0",
   resultPrice: "text-[13px] font-bold text-slate-900 leading-snug",
   resultPriceSuffix: "text-[11px] font-normal text-slate-400",
   resultTitle: "text-[11px] font-medium text-slate-600 line-clamp-1 rtl:text-[12px]",
   resultMeta: "text-[10px] text-slate-400 rtl:text-[11px]",
   resultLocation: "text-[10px] text-slate-500 font-medium rtl:text-[11px]",
   // Show as List CTA — floats above carousel
-  listCta: "absolute bottom-[9rem] left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
+  listCta: "absolute bottom-[8.5rem] left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
   listCtaIcon: "h-3.5 w-3.5",
 } as const
 

@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useMemo, useCallback, useRef, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
@@ -38,9 +39,10 @@ const MOCK_PROPERTIES: (Property & { propertyType: string })[] = MOCK_LISTINGS.m
 export default function MapV2Page() {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
+  const searchParams = useSearchParams()
 
   const [segment, setSegment] = useState<Segment>("rent")
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState(() => searchParams.get("q") ?? "")
   const [filterOpen, setFilterOpen] = useState(false)
   const [selectedId, setSelectedId] = useState<string | undefined>()
   const [mapState, setMapState] = useState({ zoom: 11, visibleCount: 0, showPrices: false })
@@ -49,6 +51,7 @@ export default function MapV2Page() {
   const scrollingFromMap = useRef(false)
 
   const filteredProperties = useMemo(() => {
+    const q = search.trim().toLowerCase()
     return MOCK_PROPERTIES.filter((p) => {
       if (segment === "buy" && p.type !== "buy") return false
       if (segment === "rent" && p.type !== "rent") return false
@@ -60,9 +63,18 @@ export default function MapV2Page() {
       if (filters.baths && p.bathrooms < filters.baths) return false
       // Property types (multi-select)
       if (filters.types && filters.types.length > 0 && !filters.types.includes(p.propertyType)) return false
+      // Search text
+      if (q) {
+        const haystack = [
+          p.title, p.location,
+          p.titleI18n?.ar, p.locationI18n?.ar,
+          p.propertyType,
+        ].join(" ").toLowerCase()
+        if (!haystack.includes(q)) return false
+      }
       return true
     })
-  }, [segment, filters])
+  }, [segment, filters, search])
 
   // When a marker is clicked, scroll the carousel to that card
   const handlePropertyClick = useCallback((id: string) => {
@@ -157,6 +169,7 @@ export default function MapV2Page() {
               value={search}
               onChange={setSearch}
               onFilterClick={() => setFilterOpen(true)}
+              onSelectArea={(area) => setSearch(isRTL ? area.ar : area.en)}
             />
             <SegmentedControl value={segment} onChange={setSegment} />
             {/* Dynamic summary pill */}
@@ -184,48 +197,50 @@ export default function MapV2Page() {
           {isRTL ? "عرض كقائمة" : "Show as List"}
         </Link>
 
-        {/* Bottom results carousel */}
+        {/* Bottom results carousel — docked above nav */}
         {filteredProperties.length > 0 && (
           <div className={mp.carouselWrap}>
-            <div ref={railRef} className={mp.carouselRail}>
-              {filteredProperties.map((p) => {
-                const isActive = p.id === selectedId
-                return (
-                  <button
-                    key={p.id}
-                    type="button"
-                    onClick={() => handlePropertyClick(p.id)}
-                    className={isActive ? mp.resultCardActive : mp.resultCard}
-                  >
-                    <div className={mp.resultImage}>
-                      <Image
-                        src={p.image}
-                        alt={displayTitle(p)}
-                        fill
-                        className="object-cover"
-                        sizes="88px"
-                      />
-                    </div>
-                    <div className={mp.resultBody}>
-                      <div dir="ltr">
-                        <span className={mp.resultPrice}>
-                          {p.price.toLocaleString()} KD
-                        </span>
-                        {p.type === "rent" && (
-                          <span className={mp.resultPriceSuffix}> / mo</span>
-                        )}
+            <div className={mp.carouselBg}>
+              <div ref={railRef} className={mp.carouselRail}>
+                {filteredProperties.map((p) => {
+                  const isActive = p.id === selectedId
+                  return (
+                    <button
+                      key={p.id}
+                      type="button"
+                      onClick={() => handlePropertyClick(p.id)}
+                      className={isActive ? mp.resultCardActive : mp.resultCard}
+                    >
+                      <div className={mp.resultImage}>
+                        <Image
+                          src={p.image}
+                          alt={displayTitle(p)}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
                       </div>
-                      <p className={mp.resultTitle}>{displayTitle(p)}</p>
-                      <p className={mp.resultMeta}>
-                        {p.bedrooms} {isRTL ? "غرف" : "Bed"} · {p.bathrooms} {isRTL ? "حمام" : "Bath"} · {p.area} m²
-                      </p>
-                      <p className={mp.resultLocation}>{displayLocation(p)}</p>
-                    </div>
-                  </button>
-                )
-              })}
-              {/* End spacer */}
-              <div className="w-8 flex-shrink-0" aria-hidden />
+                      <div className={mp.resultBody}>
+                        <div dir="ltr">
+                          <span className={mp.resultPrice}>
+                            {p.price.toLocaleString()} KD
+                          </span>
+                          {p.type === "rent" && (
+                            <span className={mp.resultPriceSuffix}> / mo</span>
+                          )}
+                        </div>
+                        <p className={mp.resultTitle}>{displayTitle(p)}</p>
+                        <p className={mp.resultMeta}>
+                          {p.bedrooms} {isRTL ? "غرف" : "Bed"} · {p.bathrooms} {isRTL ? "حمام" : "Bath"} · {p.area} m²
+                        </p>
+                        <p className={mp.resultLocation}>{displayLocation(p)}</p>
+                      </div>
+                    </button>
+                  )
+                })}
+                {/* End spacer */}
+                <div className="w-6 flex-shrink-0" aria-hidden />
+              </div>
             </div>
           </div>
         )}
