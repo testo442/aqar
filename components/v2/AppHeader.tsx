@@ -12,10 +12,13 @@ export default function AppHeader() {
     <header className={s.root}>
       <div className={s.inner}>
         <div className={s.row}>
-          {/* Logo */}
+          {/* Logo + brand lockup */}
           <Link href="/" className={s.logo}>
             <Building2 className={s.logoIcon} strokeWidth={2} />
-            <span className={s.logoText}>Aqarna</span>
+            <div className="flex flex-col">
+              <span className={s.logoText}>Aqarna</span>
+              <span className={s.logoSub}>{lang === "ar" ? "عقارنا · الكويت" : "Kuwait Real Estate"}</span>
+            </div>
           </Link>
 
           {/* EN | AR toggle */}

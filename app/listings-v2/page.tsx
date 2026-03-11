@@ -21,6 +21,7 @@ type SortOption = "recommended" | "price-low" | "price-high" | "latest"
 interface ActiveFilters {
   maxPrice?: number
   beds?: number
+  baths?: number
   types?: string[]
   location?: string
 }
@@ -40,6 +41,7 @@ export default function ListingsV2Page() {
     let count = 0
     if (filters.maxPrice) count++
     if (filters.beds) count++
+    if (filters.baths) count++
     if (filters.types && filters.types.length > 0) count++
     if (filters.location) count++
     return count
@@ -51,6 +53,7 @@ export default function ListingsV2Page() {
       location: prev.location, // preserve location (not managed by sheet)
       maxPrice: fv.maxPrice,
       beds: fv.beds,
+      baths: fv.baths,
       types: fv.types,
     }))
   }
@@ -59,8 +62,9 @@ export default function ListingsV2Page() {
   const sheetFilters: FilterValues = useMemo(() => ({
     maxPrice: filters.maxPrice,
     beds: filters.beds,
+    baths: filters.baths,
     types: filters.types,
-  }), [filters.maxPrice, filters.beds, filters.types])
+  }), [filters.maxPrice, filters.beds, filters.baths, filters.types])
 
   const removeFilter = (key: keyof ActiveFilters) => {
     setFilters((prev) => {
@@ -93,6 +97,9 @@ export default function ListingsV2Page() {
 
       // Beds filter (minimum)
       if (filters.beds && p.bedrooms < filters.beds) return false
+
+      // Baths filter (minimum)
+      if (filters.baths && p.bathrooms < filters.baths) return false
 
       // Max price filter
       if (filters.maxPrice && p.price > filters.maxPrice) return false
@@ -173,6 +180,12 @@ export default function ListingsV2Page() {
       list.push({
         key: "beds",
         label: isRTL ? `${filters.beds}+ غرف` : `${filters.beds}+ Beds`,
+      })
+    }
+    if (filters.baths) {
+      list.push({
+        key: "baths",
+        label: isRTL ? `${filters.baths}+ حمام` : `${filters.baths}+ Baths`,
       })
     }
     if (filters.maxPrice) {

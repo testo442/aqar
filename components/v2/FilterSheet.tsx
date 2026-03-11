@@ -10,6 +10,7 @@ export interface FilterValues {
   maxPrice?: number
   types?: string[]
   beds?: number
+  baths?: number
 }
 
 interface FilterSheetProps {
@@ -29,10 +30,17 @@ const PROPERTY_TYPES = [
 
 const BED_OPTIONS = [
   { key: "any", en: "Any", ar: "الكل" },
-  { key: "1",   en: "1",   ar: "١" },
-  { key: "2",   en: "2",   ar: "٢" },
-  { key: "3",   en: "3",   ar: "٣" },
-  { key: "4+",  en: "4+",  ar: "٤+" },
+  { key: "1",   en: "1+",  ar: "+١" },
+  { key: "2",   en: "2+",  ar: "+٢" },
+  { key: "3",   en: "3+",  ar: "+٣" },
+  { key: "4+",  en: "4+",  ar: "+٤" },
+]
+
+const BATH_OPTIONS = [
+  { key: "any", en: "Any", ar: "الكل" },
+  { key: "1",   en: "1+",  ar: "+١" },
+  { key: "2",   en: "2+",  ar: "+٢" },
+  { key: "3",   en: "3+",  ar: "+٣" },
 ]
 
 export default function FilterSheet({ open, onClose, appliedFilters, onApply }: FilterSheetProps) {
@@ -43,6 +51,7 @@ export default function FilterSheet({ open, onClose, appliedFilters, onApply }: 
   const [maxPrice, setMaxPrice] = useState("")
   const [selectedTypes, setSelectedTypes] = useState<string[]>([])
   const [beds, setBeds] = useState("any")
+  const [baths, setBaths] = useState("any")
 
   // Sync draft ← applied every time the sheet opens
   useEffect(() => {
@@ -50,6 +59,7 @@ export default function FilterSheet({ open, onClose, appliedFilters, onApply }: 
       setMaxPrice(appliedFilters?.maxPrice ? String(appliedFilters.maxPrice) : "")
       setSelectedTypes(appliedFilters?.types ?? [])
       setBeds(appliedFilters?.beds ? (appliedFilters.beds >= 4 ? "4+" : String(appliedFilters.beds)) : "any")
+      setBaths(appliedFilters?.baths ? (appliedFilters.baths >= 3 ? "3+" : String(appliedFilters.baths)) : "any")
     }
   }, [open, appliedFilters])
 
@@ -64,6 +74,7 @@ export default function FilterSheet({ open, onClose, appliedFilters, onApply }: 
     if (priceNum > 0) parsed.maxPrice = priceNum
     if (selectedTypes.length > 0) parsed.types = [...selectedTypes]
     if (beds !== "any") parsed.beds = beds === "4+" ? 4 : parseInt(beds, 10)
+    if (baths !== "any") parsed.baths = baths === "3+" ? 3 : parseInt(baths, 10)
     onApply?.(parsed)
     onClose()
   }
@@ -72,6 +83,7 @@ export default function FilterSheet({ open, onClose, appliedFilters, onApply }: 
     setMaxPrice("")
     setSelectedTypes([])
     setBeds("any")
+    setBaths("any")
     onApply?.({})
     onClose()
   }
@@ -145,6 +157,26 @@ export default function FilterSheet({ open, onClose, appliedFilters, onApply }: 
                   onClick={() => setBeds(key)}
                   className={`h-10 min-w-[48px] px-3 rounded-2xl text-sm font-medium border transition-colors ${
                     beds === key
+                      ? "bg-primary-600 text-white border-primary-600"
+                      : "bg-background border-border text-slate-700 hover:border-slate-400"
+                  }`}
+                >
+                  {isRTL ? ar : en}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <p className={s.sectionLabel}>{isRTL ? "الحمامات" : "Bathrooms"}</p>
+            <div className="flex gap-2 flex-wrap">
+              {BATH_OPTIONS.map(({ key, en, ar }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setBaths(key)}
+                  className={`h-10 min-w-[48px] px-3 rounded-2xl text-sm font-medium border transition-colors ${
+                    baths === key
                       ? "bg-primary-600 text-white border-primary-600"
                       : "bg-background border-border text-slate-700 hover:border-slate-400"
                   }`}

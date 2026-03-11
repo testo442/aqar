@@ -20,13 +20,14 @@ export const page = {
 export const header = {
   root: "sticky top-0 z-40 w-full bg-card border-b border-border",
   inner: "max-w-[480px] md:max-w-3xl lg:max-w-5xl mx-auto px-5 h-14",
-  row: "h-full flex items-center justify-center gap-3",
-  logo: "flex items-center gap-1.5",
-  logoIcon: "h-5 w-5 text-primary-600",
-  logoText: "text-lg font-bold text-slate-900 tracking-tight leading-none",
+  row: "h-full flex items-center justify-between",
+  logo: "flex items-center gap-2",
+  logoIcon: "h-6 w-6 text-primary-600",
+  logoText: "text-[19px] font-bold text-slate-900 tracking-tight leading-none",
+  logoSub: "text-[10px] font-medium text-slate-400 tracking-wide uppercase leading-none mt-0.5",
   langToggle: "flex items-center rounded-full border border-border shadow-sm overflow-hidden",
-  langActive: "px-2.5 py-1 text-[11px] font-semibold bg-primary-600 text-white",
-  langInactive: "px-2.5 py-1 text-[11px] font-semibold bg-card text-slate-500 hover:text-slate-700 transition-colors",
+  langActive: "px-3 py-1.5 text-[11px] font-semibold bg-primary-600 text-white",
+  langInactive: "px-3 py-1.5 text-[11px] font-semibold bg-card text-slate-500 hover:text-slate-700 transition-colors",
 } as const
 
 // ─── Search Bar ──────────────────────────────────────────────────────────────
@@ -40,6 +41,13 @@ export const searchBar = {
   filterWrapRTL: "flex-shrink-0 pl-1.5",
   filterBtn: "flex items-center gap-1.5 h-9 px-3.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold rounded-xl transition-colors",
   filterIcon: "h-3.5 w-3.5",
+  // Autocomplete dropdown
+  dropdownWrap: "absolute left-0 right-0 top-full mt-1 z-50",
+  dropdown: "bg-card rounded-2xl border border-border shadow-lg max-h-[200px] overflow-y-auto",
+  dropdownItem: "flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-muted transition-colors cursor-pointer first:rounded-t-2xl last:rounded-b-2xl",
+  dropdownItemIcon: "h-3.5 w-3.5 text-slate-400 flex-shrink-0",
+  dropdownItemText: "truncate",
+  dropdownItemSub: "text-[11px] text-slate-400 ml-auto flex-shrink-0",
 } as const
 
 // ─── Segmented Control ───────────────────────────────────────────────────────
@@ -193,8 +201,8 @@ export const mapPage = {
   controlsInner: "w-full max-w-[480px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 pt-2 pointer-events-auto space-y-2",
   // Map container
   mapWrap: "relative flex-1 w-full",
-  // Bottom results carousel
-  carouselWrap: "absolute bottom-14 left-0 right-0 z-20 pointer-events-none",
+  // Bottom results carousel — sits above bottom nav (h-14 + safe area + gap)
+  carouselWrap: "absolute bottom-20 left-0 right-0 z-20 pointer-events-none",
   carouselRail: "flex gap-2.5 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto pb-2",
   // Individual result card in carousel
   resultCard: "w-[260px] flex-shrink-0 snap-start bg-card rounded-2xl border border-border shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150",
@@ -207,7 +215,7 @@ export const mapPage = {
   resultMeta: "text-[10px] text-slate-400 rtl:text-[11px]",
   resultLocation: "text-[10px] text-slate-500 font-medium rtl:text-[11px]",
   // Show as List CTA — floats above carousel
-  listCta: "absolute bottom-[7.5rem] left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
+  listCta: "absolute bottom-[9rem] left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
   listCtaIcon: "h-3.5 w-3.5",
 } as const
 

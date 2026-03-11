@@ -56,6 +56,8 @@ export default function MapV2Page() {
       if (filters.maxPrice && p.price > filters.maxPrice) return false
       // Beds (minimum)
       if (filters.beds && p.bedrooms < filters.beds) return false
+      // Baths (minimum)
+      if (filters.baths && p.bathrooms < filters.baths) return false
       // Property types (multi-select)
       if (filters.types && filters.types.length > 0 && !filters.types.includes(p.propertyType)) return false
       return true
