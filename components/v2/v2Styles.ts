@@ -201,15 +201,15 @@ export const mapPage = {
   controlsInner: "w-full max-w-[480px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 pt-2 pointer-events-auto space-y-2",
   // Map container
   mapWrap: "relative flex-1 w-full",
-  // Bottom results carousel — docked above bottom nav with gradient backdrop
-  carouselWrap: "absolute bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-20 pointer-events-none",
-  carouselBg: "pt-4 pb-2",
+  // Bottom results carousel — docked at bottom of mapWrap (root reserves nav space via inline paddingBottom)
+  carouselWrap: "absolute bottom-2 left-0 right-0 z-20 pointer-events-none",
+  carouselBg: "pb-1",
   carouselRail: "flex gap-2 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto",
   // Individual result card in carousel
   resultCard: "w-[240px] flex-shrink-0 snap-start bg-card rounded-xl border border-border shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150",
   resultCardActive: "w-[240px] flex-shrink-0 snap-start bg-card rounded-xl border-[1.5px] border-primary-400 shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150 ring-1 ring-primary-300/40",
-  resultImage: "relative w-20 flex-shrink-0",
-  resultBody: "flex-1 px-2 py-1.5 space-y-0.5 min-w-0",
+  resultImage: "relative w-[72px] flex-shrink-0",
+  resultBody: "flex-1 px-2 py-1 space-y-px min-w-0",
   resultPrice: "text-[13px] font-bold text-slate-900 leading-snug",
   resultPriceSuffix: "text-[11px] font-normal text-slate-400",
   resultTitle: "text-[11px] font-medium text-slate-600 line-clamp-1 rtl:text-[12px]",

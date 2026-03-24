@@ -152,7 +152,11 @@ export default function MapV2Page() {
     isRTL && p.locationI18n?.ar ? p.locationI18n.ar : p.location
 
   return (
-    <div className={mp.root} dir={isRTL ? "rtl" : "ltr"}>
+    <div
+      className={mp.root}
+      dir={isRTL ? "rtl" : "ltr"}
+      style={{ paddingBottom: "calc(3.5rem + env(safe-area-inset-bottom, 0px))" }}
+    >
       <style>{`
         footer, [data-footer] { display: none !important; }
         body > header:first-of-type { display: none !important; }
