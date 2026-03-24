@@ -140,8 +140,8 @@ export const bottomNav = {
   item: "relative flex flex-col items-center justify-center gap-0.5 transition-colors",
   iconActive: "h-[18px] w-[18px] text-primary-600",
   iconInactive: "h-[18px] w-[18px] text-slate-400",
-  labelActive: "text-[10px] font-semibold text-primary-600",
-  labelInactive: "text-[10px] font-medium text-slate-400",
+  labelActive: "text-[10px] font-bold text-primary-600",
+  labelInactive: "text-[10px] font-semibold text-slate-400",
   dot: "absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-600",
 } as const
 
@@ -203,7 +203,7 @@ export const mapPage = {
   mapWrap: "relative flex-1 w-full",
   // Bottom results carousel — docked above bottom nav with gradient backdrop
   carouselWrap: "absolute bottom-[4.5rem] left-0 right-0 z-20 pointer-events-none pb-safe",
-  carouselBg: "bg-gradient-to-t from-black/20 via-black/8 to-transparent pt-6 pb-2",
+  carouselBg: "pt-4 pb-2",
   carouselRail: "flex gap-2 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto",
   // Individual result card in carousel
   resultCard: "w-[240px] flex-shrink-0 snap-start bg-card rounded-xl border border-border shadow-lg overflow-hidden flex pointer-events-auto transition-all duration-150",

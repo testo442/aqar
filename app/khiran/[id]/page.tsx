@@ -7,7 +7,6 @@ import Link from "next/link"
 import dynamic from "next/dynamic"
 import {
   ChevronLeft,
-  Heart,
   Share2,
   Star,
   BedDouble,
@@ -20,6 +19,7 @@ import {
   Wifi,
   ChevronRight,
   Phone,
+  MessageCircle,
   MapPin,
   BadgeCheck,
   CalendarDays,
@@ -77,7 +77,6 @@ export default function ChaletDetailPage() {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
 
-  const [saved, setSaved] = useState(false)
   const [heroIdx, setHeroIdx] = useState(0)
   const [activePackage, setActivePackage] = useState<PackageKey>("weekend")
 
@@ -243,16 +242,6 @@ export default function ChaletDetailPage() {
           {/* Share */}
           <button type="button" className={s.heroShare} aria-label="Share">
             <Share2 className={s.heroShareIcon} />
-          </button>
-
-          {/* Save */}
-          <button
-            type="button"
-            className={s.heroSave}
-            aria-label="Save"
-            onClick={() => setSaved(!saved)}
-          >
-            <Heart className={`${s.heroSaveIcon} ${saved ? s.heroSaveActive : s.heroSaveInactive}`} />
           </button>
 
           {/* Photo counter */}
@@ -570,9 +559,12 @@ export default function ChaletDetailPage() {
           <button type="button" className={s.stickyPrimary}>
             {isRTL ? "طلب حجز" : "Request Booking"}
           </button>
-          <button type="button" className={s.stickySecondary} aria-label="Call">
+          <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.stickySecondary} aria-label="WhatsApp">
+            <MessageCircle className={s.stickySecondaryIcon} />
+          </a>
+          <a href="tel:+96500000000" className={s.stickySecondary} aria-label="Call">
             <Phone className={s.stickySecondaryIcon} />
-          </button>
+          </a>
         </div>
       </div>
 

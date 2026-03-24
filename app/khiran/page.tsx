@@ -38,17 +38,21 @@ export default function KhiranPage() {
   const isRTL = lang === "ar"
 
   const [activePackage, setActivePackage] = useState<PackageKey>("weekend")
-  const [maxPrice, setMaxPrice] = useState<number | undefined>()
+  const [maxPrice, setMaxPrice] = useState("")
   const [minBeds, setMinBeds] = useState<number | undefined>()
+  const [minBaths, setMinBaths] = useState<number | undefined>()
   const [sort, setSort] = useState<SortOption>("recommended")
 
   const pkg = PACKAGES.find((pk) => pk.key === activePackage)!
 
+  const parsedMaxPrice = maxPrice ? Number(maxPrice) : undefined
+
   // Filter + sort chalets
   const filteredChalets = useMemo(() => {
     let results = KHIRAN_CHALETS.filter((c) => {
-      if (maxPrice && c.pricing[activePackage] > maxPrice) return false
+      if (parsedMaxPrice && c.pricing[activePackage] > parsedMaxPrice) return false
       if (minBeds && c.bedrooms < minBeds) return false
+      if (minBaths && c.bathrooms < minBaths) return false
       return true
     })
 
@@ -61,7 +65,7 @@ export default function KhiranPage() {
     }
 
     return results
-  }, [activePackage, maxPrice, minBeds, sort])
+  }, [activePackage, parsedMaxPrice, minBeds, minBaths, sort])
 
   // Map properties shape
   const mapProperties = useMemo(
@@ -117,15 +121,16 @@ export default function KhiranPage() {
     return isRTL ? labels[key]?.ar : labels[key]?.en
   }
 
-  // Quick filter chips
-  const priceOptions = [
-    { label: isRTL ? "الكل" : "All", value: undefined },
-    { label: isRTL ? "حتى 50 د.ك" : "Up to 50 KD", value: 50 },
-    { label: isRTL ? "حتى 100 د.ك" : "Up to 100 KD", value: 100 },
-  ]
-
   const bedOptions = [
     { label: isRTL ? "الكل" : "All", value: undefined },
+    { label: "1+", value: 1 },
+    { label: "2+", value: 2 },
+    { label: "3+", value: 3 },
+  ]
+
+  const bathOptions = [
+    { label: isRTL ? "الكل" : "All", value: undefined },
+    { label: "1+", value: 1 },
     { label: "2+", value: 2 },
     { label: "3+", value: 3 },
   ]
@@ -178,29 +183,45 @@ export default function KhiranPage() {
           ))}
         </div>
 
-        {/* Quick filter chips */}
+        {/* Filters row */}
         <div className={kp.filterRow}>
           <SlidersHorizontal className={`${kp.filterChipIcon} mt-1.5 flex-shrink-0 text-slate-400`} />
-          {priceOptions.map((opt) => (
-            <button
-              key={opt.label}
-              type="button"
-              onClick={() => setMaxPrice(opt.value)}
-              className={maxPrice === opt.value ? kp.filterChipActive : kp.filterChip}
-            >
-              {opt.label}
-            </button>
-          ))}
+          {/* Max price input */}
+          <div className="flex-shrink-0 flex items-center gap-1">
+            <span className="text-[11px] text-slate-400">{isRTL ? "حتى" : "Max"}</span>
+            <input
+              type="number"
+              inputMode="numeric"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              placeholder="KD"
+              className="w-16 h-7 px-2 rounded-lg bg-card border border-border text-xs text-slate-700 placeholder:text-slate-400 outline-none focus:border-primary-400 tabular-nums"
+            />
+          </div>
           <span className="w-px h-5 bg-border flex-shrink-0 self-center" />
           <span className="text-[11px] text-slate-400 flex-shrink-0 self-center">
             {isRTL ? "غرف:" : "Beds:"}
           </span>
           {bedOptions.map((opt) => (
             <button
-              key={opt.label}
+              key={`bed-${opt.label}`}
               type="button"
               onClick={() => setMinBeds(opt.value)}
               className={minBeds === opt.value ? kp.filterChipActive : kp.filterChip}
+            >
+              {opt.label}
+            </button>
+          ))}
+          <span className="w-px h-5 bg-border flex-shrink-0 self-center" />
+          <span className="text-[11px] text-slate-400 flex-shrink-0 self-center">
+            {isRTL ? "حمام:" : "Baths:"}
+          </span>
+          {bathOptions.map((opt) => (
+            <button
+              key={`bath-${opt.label}`}
+              type="button"
+              onClick={() => setMinBaths(opt.value)}
+              className={minBaths === opt.value ? kp.filterChipActive : kp.filterChip}
             >
               {opt.label}
             </button>

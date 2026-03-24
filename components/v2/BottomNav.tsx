@@ -7,10 +7,10 @@ import { useLanguage } from "@/app/providers"
 import { bottomNav as s } from "./v2Styles"
 
 const NAV_ITEMS = [
-  { href: "/khiran",      icon: TreePalm,   labelEn: "Khiran",   labelAr: "الخيران" },
   { href: "/map",         icon: Map,        labelEn: "Map",      labelAr: "الخريطة" },
-  { href: "/",            icon: Home,       labelEn: "Home",     labelAr: "الرئيسية" },
   { href: "/properties",  icon: LayoutList, labelEn: "Listings", labelAr: "العقارات" },
+  { href: "/",            icon: Home,       labelEn: "Home",     labelAr: "الرئيسية" },
+  { href: "/khiran",      icon: TreePalm,   labelEn: "Khiran",   labelAr: "الخيران" },
   { href: "/apply",       icon: PlusSquare, labelEn: "Apply",    labelAr: "تقديم" },
 ]
 

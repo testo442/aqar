@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react"
 import Link from "next/link"
-import { Map, Bookmark, SlidersHorizontal, X } from "lucide-react"
+import { Map, SlidersHorizontal, X } from "lucide-react"
 import AppHeader from "@/components/v2/AppHeader"
 import SearchBar from "@/components/v2/SearchBar"
 import SegmentedControl, { type Segment } from "@/components/v2/SegmentedControl"
@@ -35,7 +35,6 @@ export default function ListingsV2Page() {
   const [search, setSearch] = useState("")
   const [filterOpen, setFilterOpen] = useState(false)
   const [sort, setSort] = useState<SortOption>("recommended")
-  const [liked, setLiked] = useState<Set<string>>(new Set())
   const [filters, setFilters] = useState<ActiveFilters>({})
 
   const filterCount = useMemo(() => {
@@ -76,15 +75,6 @@ export default function ListingsV2Page() {
     setFilters((prev) => {
       const next = { ...prev }
       delete next[key]
-      return next
-    })
-  }
-
-  const toggleLike = (id: string) => {
-    setLiked((prev) => {
-      const next = new Set(prev)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
       return next
     })
   }
@@ -284,10 +274,6 @@ export default function ListingsV2Page() {
               ))}
             </select>
           </div>
-          <button type="button" className={`${lp.saveBtn} ${isRTL ? "flex-row-reverse" : ""}`}>
-            <Bookmark className={lp.saveIcon} />
-            {isRTL ? "حفظ البحث" : "Save Search"}
-          </button>
         </div>
 
         {/* Listing grid — first 2 are featured */}
@@ -298,8 +284,6 @@ export default function ListingsV2Page() {
                 key={listing.id}
                 {...listing}
                 isFeatured={i < 2}
-                liked={liked.has(listing.id)}
-                onToggleLike={toggleLike}
                 href={`/properties/${listing.id}`}
               />
             ))}

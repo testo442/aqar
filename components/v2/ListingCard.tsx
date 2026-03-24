@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Heart, MapPin } from "lucide-react"
+import { MapPin } from "lucide-react"
 import { useLanguage } from "@/app/providers"
 import { listingsPage as s } from "./v2Styles"
 
@@ -22,11 +22,6 @@ export interface ListingCardData {
   href?: string
 }
 
-interface ListingCardProps extends ListingCardData {
-  liked?: boolean
-  onToggleLike?: (id: string) => void
-}
-
 export default function ListingCard({
   id,
   title,
@@ -41,9 +36,7 @@ export default function ListingCard({
   locationAr,
   isFeatured,
   href,
-  liked,
-  onToggleLike,
-}: ListingCardProps) {
+}: ListingCardData) {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
   const displayTitle = isRTL && titleAr ? titleAr : title
@@ -68,21 +61,6 @@ export default function ListingCard({
             {isRTL ? "مميز" : "Featured"}
           </span>
         )}
-        <button
-          type="button"
-          className={s.cardHeart}
-          onClick={(e) => {
-            e.preventDefault()
-            e.stopPropagation()
-            onToggleLike?.(id)
-          }}
-          aria-label={liked ? "Remove from saved" : "Save property"}
-        >
-          <Heart
-            className={`${s.cardHeartIcon} ${liked ? s.cardHeartActive : s.cardHeartInactive}`}
-            strokeWidth={2}
-          />
-        </button>
       </div>
 
       {/* Body */}

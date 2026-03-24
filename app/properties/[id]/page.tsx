@@ -1,15 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowLeft,
-  Heart,
   Phone,
   MessageCircle,
-  Bookmark,
   CalendarCheck,
   FileText,
   BedDouble,
@@ -39,8 +36,6 @@ interface PageProps {
 export default function PropertyDetailsPage({ params }: PageProps) {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
-  const [saved, setSaved] = useState(false)
-
   const p = getPropertyById(params.id)
 
   // Not found state
@@ -129,18 +124,11 @@ export default function PropertyDetailsPage({ params }: PageProps) {
             priority
           />
           <div className={s.heroOverlay} />
-          <button
-            type="button"
-            onClick={() => setSaved(!saved)}
-            className={s.heroSave}
-          >
-            <Heart
-              className={`${s.heroSaveIcon} ${saved ? s.heroSaveActive : s.heroSaveInactive}`}
-            />
-          </button>
-          <span className={s.heroCounter}>
-            1 / {p.images.length}
-          </span>
+          {p.images.length > 1 && (
+            <span className={s.heroCounter}>
+              1 / {p.images.length}
+            </span>
+          )}
         </div>
 
         {/* Title / price / facts */}
@@ -191,17 +179,9 @@ export default function PropertyDetailsPage({ params }: PageProps) {
             <a href="tel:+96500000000" className={s.actionSecondary} aria-label="Call">
               <Phone className="h-4 w-4 text-slate-600" />
             </a>
-            <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.actionSecondary} aria-label="Message">
+            <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.actionSecondary} aria-label="WhatsApp">
               <MessageCircle className="h-4 w-4 text-slate-600" />
             </a>
-            <button
-              type="button"
-              className={s.actionSecondary}
-              aria-label="Save"
-              onClick={() => setSaved(!saved)}
-            >
-              <Bookmark className={`h-4 w-4 ${saved ? "text-primary-600 fill-primary-600" : "text-slate-600"}`} />
-            </button>
           </div>
         </div>
 

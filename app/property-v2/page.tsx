@@ -1,15 +1,12 @@
 "use client"
 
-import { useState } from "react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import {
   ArrowLeft,
-  Heart,
   Phone,
   MessageCircle,
-  Bookmark,
   CalendarCheck,
   FileText,
   BedDouble,
@@ -65,8 +62,6 @@ const MOCK = {
 export default function PropertyDetailV2Page() {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
-  const [saved, setSaved] = useState(false)
-
   const p = MOCK
   const isViewingType = VIEWING_TYPES.has(p.propertyType)
   const displayTitle = isRTL && p.titleAr ? p.titleAr : p.title
@@ -133,18 +128,11 @@ export default function PropertyDetailV2Page() {
             priority
           />
           <div className={s.heroOverlay} />
-          <button
-            type="button"
-            onClick={() => setSaved(!saved)}
-            className={s.heroSave}
-          >
-            <Heart
-              className={`${s.heroSaveIcon} ${saved ? s.heroSaveActive : s.heroSaveInactive}`}
-            />
-          </button>
-          <span className={s.heroCounter}>
-            1 / {p.images.length}
-          </span>
+          {p.images.length > 1 && (
+            <span className={s.heroCounter}>
+              1 / {p.images.length}
+            </span>
+          )}
         </div>
 
         {/* Title / price / facts */}
@@ -195,14 +183,6 @@ export default function PropertyDetailV2Page() {
             </button>
             <button type="button" className={s.actionSecondary} aria-label="Message">
               <MessageCircle className="h-4.5 w-4.5 text-slate-600" />
-            </button>
-            <button
-              type="button"
-              className={s.actionSecondary}
-              aria-label="Save"
-              onClick={() => setSaved(!saved)}
-            >
-              <Bookmark className={`h-4.5 w-4.5 ${saved ? "text-primary-600 fill-primary-600" : "text-slate-600"}`} />
             </button>
           </div>
         </div>

@@ -10,6 +10,7 @@ import BottomNav from "@/components/v2/BottomNav"
 import FilterSheet from "@/components/v2/FilterSheet"
 import MiniListingCard, { type MiniListingCardProps } from "@/components/v2/MiniListingCard"
 import { useLanguage } from "@/app/providers"
+import { Phone, MessageCircle, Mail } from "lucide-react"
 import {
   page as p,
   section as sec,
@@ -140,6 +141,39 @@ export default function UIV2Page() {
           <span className={tb.dot}>·</span>
           <span className={tb.accent}>{isRTL ? "جاهز للكويت" : "Kuwait‑ready"}</span>
         </div>
+
+        {/* Contact Us */}
+        <section className="mt-6 mb-4">
+          <h2 className={sec.title}>{isRTL ? "تواصل معنا" : "Contact Us"}</h2>
+          <p className="text-xs text-slate-400 mt-1 mb-3 rtl:text-[13px]">
+            {isRTL ? "نسعد بمساعدتك في أي وقت" : "We're here to help anytime"}
+          </p>
+          <div className="flex gap-2">
+            <a
+              href="https://wa.me/96500000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {isRTL ? "واتساب" : "WhatsApp"}
+            </a>
+            <a
+              href="tel:+96500000000"
+              className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+              {isRTL ? "اتصال" : "Call"}
+            </a>
+            <a
+              href="mailto:info@aqarna.kw"
+              className="flex-1 flex items-center justify-center gap-2 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
+            >
+              <Mail className="h-4 w-4" />
+              {isRTL ? "إيميل" : "Email"}
+            </a>
+          </div>
+        </section>
       </div>
 
       <FilterSheet open={filterOpen} onClose={() => setFilterOpen(false)} />
