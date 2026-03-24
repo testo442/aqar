@@ -128,7 +128,7 @@ export const trustBar = {
   wrapper: "flex items-center justify-center gap-2 py-4",
   item: "flex items-center gap-1",
   icon: "text-emerald-500 text-[11px]",
-  text: "text-[11px] text-slate-400 rtl:text-[12px]",
+  text: "text-[11px] font-medium text-slate-600 rtl:text-[12px]",
   dot: "text-slate-300",
   accent: "text-[11px] font-semibold text-slate-600 rtl:text-[12px]",
 } as const
@@ -202,7 +202,7 @@ export const mapPage = {
   // Map container
   mapWrap: "relative flex-1 w-full",
   // Bottom results carousel — docked above bottom nav with gradient backdrop
-  carouselWrap: "absolute bottom-[4.5rem] left-0 right-0 z-20 pointer-events-none pb-safe",
+  carouselWrap: "absolute bottom-[calc(4.5rem+env(safe-area-inset-bottom))] left-0 right-0 z-20 pointer-events-none",
   carouselBg: "pt-4 pb-2",
   carouselRail: "flex gap-2 px-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pointer-events-auto",
   // Individual result card in carousel
@@ -215,8 +215,9 @@ export const mapPage = {
   resultTitle: "text-[11px] font-medium text-slate-600 line-clamp-1 rtl:text-[12px]",
   resultMeta: "text-[10px] text-slate-400 rtl:text-[11px]",
   resultLocation: "text-[10px] text-slate-500 font-medium rtl:text-[11px]",
-  // Show as List CTA — floats above carousel
-  listCta: "absolute bottom-[8.5rem] left-1/2 -translate-x-1/2 z-20 inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
+  // Show as List CTA — inside carouselWrap, above the card rail
+  listCtaRow: "flex justify-center pb-2 pointer-events-none",
+  listCta: "inline-flex items-center gap-1.5 bg-card/95 backdrop-blur-sm hover:bg-muted text-slate-700 text-xs font-semibold px-4 py-2 rounded-full shadow-sm border border-border transition-all pointer-events-auto",
   listCtaIcon: "h-3.5 w-3.5",
 } as const
 

@@ -6,7 +6,6 @@ import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { LayoutList } from "lucide-react"
-import AppHeader from "@/components/v2/AppHeader"
 import SearchBar from "@/components/v2/SearchBar"
 import SegmentedControl, { type Segment } from "@/components/v2/SegmentedControl"
 import BottomNav from "@/components/v2/BottomNav"
@@ -157,10 +156,11 @@ export default function MapV2Page() {
       <style>{`
         footer, [data-footer] { display: none !important; }
         body > header:first-of-type { display: none !important; }
+        @media (max-width: 768px) {
+          .leaflet-control-zoom { display: none !important; }
+        }
       `}</style>
-      <AppHeader />
-
-      {/* Map fills remaining height */}
+      {/* Map fills remaining height — no AppHeader on Map page to maximize vertical space */}
       <div className={mp.mapWrap}>
         {/* Controls overlay with gradient backdrop */}
         <div className={mp.controlsWrap}>
@@ -191,15 +191,16 @@ export default function MapV2Page() {
           onMapState={handleMapState}
         />
 
-        {/* Show as List CTA */}
-        <Link href="/properties" className={mp.listCta}>
-          <LayoutList className={mp.listCtaIcon} />
-          {isRTL ? "عرض كقائمة" : "Show as List"}
-        </Link>
-
         {/* Bottom results carousel — docked above nav */}
         {filteredProperties.length > 0 && (
           <div className={mp.carouselWrap}>
+            {/* Show as List CTA — sits above the card rail */}
+            <div className={mp.listCtaRow}>
+              <Link href="/properties" className={mp.listCta}>
+                <LayoutList className={mp.listCtaIcon} />
+                {isRTL ? "عرض كقائمة" : "Show as List"}
+              </Link>
+            </div>
             <div className={mp.carouselBg}>
               <div ref={railRef} className={mp.carouselRail}>
                 {filteredProperties.map((p) => {
