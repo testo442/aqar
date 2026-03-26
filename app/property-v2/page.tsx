@@ -6,7 +6,7 @@ import Link from "next/link"
 import {
   ArrowLeft,
   Phone,
-  MessageCircle,
+  CalendarCheck,
   Navigation,
   BedDouble,
   Bath,
@@ -16,6 +16,7 @@ import {
   Clock,
   ShieldCheck,
 } from "lucide-react"
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
 import { useLanguage } from "@/app/providers"
@@ -168,16 +169,23 @@ export default function PropertyDetailV2Page() {
         {/* Contact actions */}
         <div className={s.actionSection}>
           <div className="flex flex-col gap-2">
-            <a
-              href="https://wa.me/96500000000"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+            <button
+              type="button"
+              className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
             >
-              <MessageCircle className="h-4 w-4" />
-              {isRTL ? "تواصل عبر واتساب" : "WhatsApp Agent"}
-            </a>
+              <CalendarCheck className="h-4 w-4" />
+              {isRTL ? "حجز معاينة" : "Book Viewing"}
+            </button>
             <div className="flex gap-2">
+              <a
+                href="https://wa.me/96500000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                {isRTL ? "واتساب" : "WhatsApp"}
+              </a>
               <a
                 href="tel:+96500000000"
                 className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
@@ -192,7 +200,7 @@ export default function PropertyDetailV2Page() {
                 className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
               >
                 <Navigation className="h-4 w-4" />
-                {isRTL ? "الاتجاهات" : "Directions"}
+                {isRTL ? "اتجاهات" : "Directions"}
               </a>
             </div>
           </div>
@@ -273,25 +281,24 @@ export default function PropertyDetailV2Page() {
         </div>
       </div>
 
-      {/* Sticky bottom bar — WhatsApp primary + Call */}
+      {/* Sticky bottom bar — Book Viewing primary + WhatsApp + Call */}
       <div className={s.stickyBar}>
         <div className={s.stickyInner}>
           <div>
             <span className={s.stickyPrice} dir="ltr">{priceLine}</span>
             {priceSuffix && <span className={s.stickyPriceSuffix}> {priceSuffix}</span>}
           </div>
-          <a
-            href="https://wa.me/96500000000"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+          <button
+            type="button"
+            className={s.stickyPrimary}
           >
-            <MessageCircle className="h-4 w-4" />
-            {isRTL ? "واتساب" : "WhatsApp"}
+            {isRTL ? "حجز معاينة" : "Book Viewing"}
+          </button>
+          <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.stickySecondary} aria-label="WhatsApp">
+            <WhatsAppIcon className={s.stickySecondaryIcon} />
           </a>
-          <a href="tel:+96500000000" className={s.stickySecondary}>
+          <a href="tel:+96500000000" className={s.stickySecondary} aria-label="Call">
             <Phone className={s.stickySecondaryIcon} />
-            {isRTL ? "اتصل" : "Call"}
           </a>
         </div>
       </div>

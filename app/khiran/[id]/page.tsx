@@ -19,11 +19,11 @@ import {
   Wifi,
   ChevronRight,
   Phone,
-  MessageCircle,
   MapPin,
   BadgeCheck,
   CalendarDays,
 } from "lucide-react"
+import WhatsAppIcon from "@/components/icons/WhatsAppIcon"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
 import { useLanguage } from "@/app/providers"
@@ -62,6 +62,63 @@ function isBetween(d: Date, start: Date, end: Date) {
   return d > start && d < end
 }
 
+/** Returns the day-of-week index: 0=Sun … 6=Sat */
+function dow(d: Date) {
+  return d.getDay()
+}
+
+// ─── Package-aware date rules ────────────────────────────────────────────────
+
+/** Weekend (Thu–Sat): only Thu=4, Fri=5, Sat=6 are valid */
+const WEEKEND_DAYS = new Set([4, 5, 6])
+/** Weekday (Sun–Wed): only Sun=0, Mon=1, Tue=2, Wed=3 are valid */
+const WEEKDAY_DAYS = new Set([0, 1, 2, 3])
+
+/**
+ * Returns true if a date is disabled for the active package,
+ * independent of unavailable/past checks.
+ */
+function isPackageDisabled(date: Date, pkg: PackageKey): boolean {
+  const d = dow(date)
+  if (pkg === "weekend") return !WEEKEND_DAYS.has(d)
+  if (pkg === "weekday") return !WEEKDAY_DAYS.has(d)
+  // fullWeek and holiday: all days are valid check-in candidates
+  return false
+}
+
+/**
+ * Valid check-in day for the package?
+ * - weekend: Thu only
+ * - weekday: Sun only
+ * - fullWeek / holiday: any day
+ */
+function isValidCheckIn(date: Date, pkg: PackageKey): boolean {
+  if (pkg === "weekend") return dow(date) === 4 // Thursday
+  if (pkg === "weekday") return dow(date) === 0 // Sunday
+  return true
+}
+
+/**
+ * Given a check-in date, compute the forced check-out date for the package.
+ * Returns null if the package allows free check-out selection (holiday).
+ */
+function getAutoCheckOut(checkInDate: Date, pkg: PackageKey): Date | null {
+  const out = new Date(checkInDate)
+  if (pkg === "weekend") {
+    out.setDate(out.getDate() + 2) // Thu → Sat
+    return out
+  }
+  if (pkg === "weekday") {
+    out.setDate(out.getDate() + 3) // Sun → Wed
+    return out
+  }
+  if (pkg === "fullWeek") {
+    out.setDate(out.getDate() + 7) // any → +7
+    return out
+  }
+  return null // holiday: user picks freely
+}
+
 const MONTH_NAMES_EN = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
 const MONTH_NAMES_AR = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"]
 const WEEK_DAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
@@ -92,18 +149,59 @@ export default function ChaletDetailPage() {
     return new Set(chalet.unavailableDates)
   }, [chalet])
 
+  // Reset dates when package changes
+  const handlePackageChange = useCallback((pkg: PackageKey) => {
+    setActivePackage(pkg)
+    setCheckIn(null)
+    setCheckOut(null)
+  }, [])
+
   const handleDayClick = useCallback(
     (date: Date) => {
       const iso = toISODate(date)
       if (unavailableSet.has(iso)) return
       if (date < today) return
+      if (isPackageDisabled(date, activePackage)) return
 
+      // For weekend/weekday/fullWeek: check-in auto-sets check-out
+      const autoOut = isValidCheckIn(date, activePackage)
+        ? getAutoCheckOut(date, activePackage)
+        : null
+
+      if (activePackage !== "holiday" && autoOut) {
+        // Only allow valid check-in days
+        if (!isValidCheckIn(date, activePackage)) return
+
+        // Verify no unavailable or package-disabled dates in the auto range
+        let blocked = false
+        const cursor = new Date(date)
+        cursor.setDate(cursor.getDate() + 1)
+        while (cursor <= autoOut) {
+          const cursorIso = toISODate(cursor)
+          if (unavailableSet.has(cursorIso) || isPackageDisabled(cursor, activePackage)) {
+            blocked = true
+            break
+          }
+          cursor.setDate(cursor.getDate() + 1)
+        }
+        if (blocked) return // Can't book this range
+
+        // Toggle off if same check-in clicked
+        if (checkIn && isSameDay(date, checkIn)) {
+          setCheckIn(null)
+          setCheckOut(null)
+        } else {
+          setCheckIn(date)
+          setCheckOut(autoOut)
+        }
+        return
+      }
+
+      // Holiday: free check-in / check-out selection (original logic)
       if (!checkIn || (checkIn && checkOut)) {
-        // Start new selection
         setCheckIn(date)
         setCheckOut(null)
       } else {
-        // Complete selection
         if (date < checkIn) {
           setCheckIn(date)
           setCheckOut(checkIn)
@@ -122,7 +220,6 @@ export default function ChaletDetailPage() {
             cursor.setDate(cursor.getDate() + 1)
           }
           if (blocked) {
-            // Start fresh with this date
             setCheckIn(date)
             setCheckOut(null)
           } else {
@@ -131,7 +228,7 @@ export default function ChaletDetailPage() {
         }
       }
     },
-    [checkIn, checkOut, unavailableSet, today],
+    [checkIn, checkOut, unavailableSet, today, activePackage],
   )
 
   const nightCount = useMemo(() => {
@@ -360,7 +457,7 @@ export default function ChaletDetailPage() {
                 <button
                   key={pkg.key}
                   type="button"
-                  onClick={() => setActivePackage(pkg.key)}
+                  onClick={() => handlePackageChange(pkg.key)}
                   className={isActive ? s.pricingCardActive : s.pricingCard}
                 >
                   <p className={isActive ? s.pricingLabelActive : s.pricingLabel}>
@@ -390,9 +487,13 @@ export default function ChaletDetailPage() {
             <h2 className={s.calendarTitle}>{isRTL ? "التوفر والحجز" : "Availability"}</h2>
           </div>
           <p className={s.calendarSub}>
-            {isRTL
-              ? "اختر تاريخ الوصول والمغادرة"
-              : "Select your check-in and check-out dates"}
+            {activePackage === "weekend"
+              ? isRTL ? "اختر يوم خميس للوصول (خميس–سبت)" : "Select a Thursday to check in (Thu–Sat)"
+              : activePackage === "weekday"
+              ? isRTL ? "اختر يوم أحد للوصول (أحد–أربعاء)" : "Select a Sunday to check in (Sun–Wed)"
+              : activePackage === "fullWeek"
+              ? isRTL ? "اختر يوم الوصول (٧ ليالي)" : "Select your check-in day (7 nights)"
+              : isRTL ? "اختر تاريخ الوصول والمغادرة" : "Select your check-in and check-out dates"}
           </p>
 
           <div className={s.calendarCard}>
@@ -425,13 +526,15 @@ export default function ChaletDetailPage() {
                 const iso = toISODate(date)
                 const isPast = date < today && !isSameDay(date, today)
                 const isUnavailable = unavailableSet.has(iso)
+                const pkgDisabled = isPackageDisabled(date, activePackage)
+                const isDisabled = isPast || isUnavailable || pkgDisabled
                 const isToday = isSameDay(date, today)
                 const isStart = checkIn && isSameDay(date, checkIn)
                 const isEnd = checkOut && isSameDay(date, checkOut)
                 const isInRange = checkIn && checkOut && isBetween(date, checkIn, checkOut)
 
                 let className: string = s.calendarDay
-                if (isPast) className = s.calendarDayPast
+                if (isPast || pkgDisabled) className = s.calendarDayPast
                 else if (isUnavailable) className = s.calendarDayUnavailable
                 else if (isStart || isEnd) className = s.calendarDaySelected
                 else if (isInRange) className = s.calendarDayRange
@@ -443,7 +546,7 @@ export default function ChaletDetailPage() {
                     type="button"
                     onClick={() => handleDayClick(date)}
                     className={className}
-                    disabled={isPast || isUnavailable}
+                    disabled={isDisabled}
                   >
                     {day}
                   </button>
@@ -527,9 +630,9 @@ export default function ChaletDetailPage() {
               href="https://wa.me/96500000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
             >
-              <MessageCircle className="h-4 w-4" />
+              <WhatsAppIcon className="h-4 w-4" />
               {isRTL ? "واتساب" : "WhatsApp"}
             </a>
             <a
@@ -597,7 +700,7 @@ export default function ChaletDetailPage() {
             {isRTL ? "طلب حجز" : "Request Booking"}
           </button>
           <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.stickySecondary} aria-label="WhatsApp">
-            <MessageCircle className={s.stickySecondaryIcon} />
+            <WhatsAppIcon className={s.stickySecondaryIcon} />
           </a>
           <a href="tel:+96500000000" className={s.stickySecondary} aria-label="Call">
             <Phone className={s.stickySecondaryIcon} />
