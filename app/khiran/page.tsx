@@ -14,6 +14,7 @@ import {
   Star,
   SlidersHorizontal,
   BadgeCheck,
+  MapPin,
 } from "lucide-react"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
@@ -173,7 +174,10 @@ export default function KhiranPage() {
             <button
               key={pk.key}
               type="button"
-              onClick={() => setActivePackage(pk.key)}
+              onClick={() => {
+                setActivePackage(pk.key)
+                setMaxPrice("")
+              }}
               className={`${kp.packageTab} ${
                 activePackage === pk.key ? kp.packageTabActive : kp.packageTabInactive
               }`}
@@ -353,6 +357,15 @@ export default function KhiranPage() {
               mode="preview"
             />
           </div>
+          <a
+            href="https://www.google.com/maps/dir/?api=1&destination=28.643,48.378"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            <MapPin className="h-3.5 w-3.5" />
+            {isRTL ? "فتح في خرائط جوجل" : "Get Directions to Khiran"}
+          </a>
         </div>
       </div>
 

@@ -516,6 +516,34 @@ export default function ChaletDetailPage() {
 
         <div className={s.divider} />
 
+        {/* Contact the host */}
+        <div className={s.descSection}>
+          <h2 className={s.descTitle}>{isRTL ? "تواصل مع المالك" : "Contact Host"}</h2>
+          <p className="text-xs text-slate-400 mb-3 rtl:text-[13px]">
+            {isRTL ? "لديك سؤال قبل الحجز؟" : "Have a question before booking?"}
+          </p>
+          <div className="flex gap-2">
+            <a
+              href="https://wa.me/96500000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {isRTL ? "واتساب" : "WhatsApp"}
+            </a>
+            <a
+              href="tel:+96500000000"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
+            >
+              <Phone className="h-4 w-4" />
+              {isRTL ? "اتصال" : "Call"}
+            </a>
+          </div>
+        </div>
+
+        <div className={s.divider} />
+
         {/* Map */}
         <div className={s.mapSection}>
           <h2 className={s.mapTitle}>{isRTL ? "الموقع" : "Location"}</h2>
@@ -532,6 +560,15 @@ export default function ChaletDetailPage() {
               {isRTL ? "الخيران، محافظة الأحمدي، الكويت" : "Khiran, Al Ahmadi Governorate, Kuwait"}
             </span>
           </div>
+          <a
+            href={`https://www.google.com/maps/dir/?api=1&destination=${chalet.lat},${chalet.lng}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors"
+          >
+            <MapPin className="h-3.5 w-3.5" />
+            {isRTL ? "فتح في خرائط جوجل" : "Get Directions"}
+          </a>
         </div>
       </div>
 

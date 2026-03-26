@@ -7,8 +7,7 @@ import {
   ArrowLeft,
   Phone,
   MessageCircle,
-  CalendarCheck,
-  FileText,
+  Navigation,
   BedDouble,
   Bath,
   Maximize2,
@@ -24,8 +23,7 @@ import { propertyDetail as s } from "@/components/v2/v2Styles"
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false })
 
-// ── Property types that support "Book Viewing" ──────────────────────────────
-const VIEWING_TYPES = new Set(["apartment", "villa", "chalet", "house", "floor"])
+const GOOGLE_MAPS_DIR = "https://www.google.com/maps/dir/?api=1&destination="
 
 // ── Mock property ───────────────────────────────────────────────────────────
 const MOCK = {
@@ -63,17 +61,13 @@ export default function PropertyDetailV2Page() {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
   const p = MOCK
-  const isViewingType = VIEWING_TYPES.has(p.propertyType)
   const displayTitle = isRTL && p.titleAr ? p.titleAr : p.title
   const displayLocation = isRTL && p.locationAr ? p.locationAr : p.location
   const displayGov = isRTL && p.governorateAr ? p.governorateAr : p.governorate
   const displayDesc = isRTL && p.descriptionAr ? p.descriptionAr : p.description
   const displayFeature = isRTL && p.featureAr ? p.featureAr : p.feature
 
-  const primaryLabel = isViewingType
-    ? isRTL ? "حجز معاينة" : "Book Viewing"
-    : isRTL ? "طلب تفاصيل" : "Request Details"
-  const PrimaryIcon = isViewingType ? CalendarCheck : FileText
+  const mapsUrl = `${GOOGLE_MAPS_DIR}${p.lat},${p.lng}`
 
   const priceLine = p.type === "rent"
     ? `${p.price.toLocaleString()} KD`
@@ -171,19 +165,36 @@ export default function PropertyDetailV2Page() {
           </div>
         </div>
 
-        {/* Primary action row */}
+        {/* Contact actions */}
         <div className={s.actionSection}>
-          <div className={s.actionRow}>
-            <button type="button" className={s.actionPrimary}>
-              <PrimaryIcon className="h-4 w-4" />
-              {primaryLabel}
-            </button>
-            <button type="button" className={s.actionSecondary} aria-label="Call">
-              <Phone className="h-4.5 w-4.5 text-slate-600" />
-            </button>
-            <button type="button" className={s.actionSecondary} aria-label="Message">
-              <MessageCircle className="h-4.5 w-4.5 text-slate-600" />
-            </button>
+          <div className="flex flex-col gap-2">
+            <a
+              href="https://wa.me/96500000000"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {isRTL ? "تواصل عبر واتساب" : "WhatsApp Agent"}
+            </a>
+            <div className="flex gap-2">
+              <a
+                href="tel:+96500000000"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Phone className="h-4 w-4" />
+                {isRTL ? "اتصال" : "Call"}
+              </a>
+              <a
+                href={mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+              >
+                <Navigation className="h-4 w-4" />
+                {isRTL ? "الاتجاهات" : "Directions"}
+              </a>
+            </div>
           </div>
         </div>
 
@@ -226,13 +237,15 @@ export default function PropertyDetailV2Page() {
                 <p className={s.factValue}>{p.area} m²</p>
               </div>
             </div>
-            <div className={s.factCard}>
-              <Waves className={s.factIcon} />
-              <div>
-                <p className={s.factLabel}>{isRTL ? "ميزة خاصة" : "Feature"}</p>
-                <p className={s.factValue}>{displayFeature}</p>
+            {displayFeature && (
+              <div className={s.factCard}>
+                <Waves className={s.factIcon} />
+                <div>
+                  <p className={s.factLabel}>{isRTL ? "ميزة خاصة" : "Feature"}</p>
+                  <p className={s.factValue}>{displayFeature}</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -260,21 +273,26 @@ export default function PropertyDetailV2Page() {
         </div>
       </div>
 
-      {/* Sticky bottom CTA bar */}
+      {/* Sticky bottom bar — WhatsApp primary + Call */}
       <div className={s.stickyBar}>
         <div className={s.stickyInner}>
           <div>
             <span className={s.stickyPrice} dir="ltr">{priceLine}</span>
             {priceSuffix && <span className={s.stickyPriceSuffix}> {priceSuffix}</span>}
           </div>
-          <button type="button" className={s.stickyPrimary}>
-            <PrimaryIcon className="h-4 w-4" />
-            {primaryLabel}
-          </button>
-          <button type="button" className={s.stickySecondary}>
+          <a
+            href="https://wa.me/96500000000"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 h-11 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+          >
+            <MessageCircle className="h-4 w-4" />
+            {isRTL ? "واتساب" : "WhatsApp"}
+          </a>
+          <a href="tel:+96500000000" className={s.stickySecondary}>
             <Phone className={s.stickySecondaryIcon} />
             {isRTL ? "اتصل" : "Call"}
-          </button>
+          </a>
         </div>
       </div>
 

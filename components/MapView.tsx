@@ -526,11 +526,16 @@ export default function MapView({
         zoomControl={!isPreview}
         attributionControl={!isPreview}
       >
+        {/* CARTO Voyager @2x — best free raster option for premium feel.
+            For true premium (vector, smooth zoom, 3D): migrate to Mapbox GL JS or MapTiler SDK.
+            Both require a paid API key but deliver significantly sharper rendering. */}
         <TileLayer
           attribution={isPreview ? "" : '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/">CARTO</a>'}
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png"
           tileSize={512}
           zoomOffset={-1}
+          maxZoom={20}
+          maxNativeZoom={18}
         />
 
         {isPreview && (
