@@ -10,84 +10,87 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Professional Blue System (Primary)
+        // Brand Teal System (Primary)
         primary: {
-          50: "#EFF6FF",
-          100: "#DBEAFE",
-          200: "#BFDBFE",
-          300: "#93C5FD",
-          400: "#60A5FA",
-          500: "#3D78E0",
-          600: "#2E56D4", // DEFAULT PRIMARY - warmer, WCAG AA
-          700: "#2248BA",
-          800: "#1E40AF", // Secondary blue
-          900: "#1E3A8A",
-          DEFAULT: "#2E56D4",
+          50: "#E8F4F5",   // pale wash
+          100: "#D1E9EB",
+          200: "#A3D3D7",
+          300: "#75BDC3",
+          400: "#47A7AF",
+          500: "#0F8A8F",  // teal light
+          600: "#0D7377",  // teal primary (brand)
+          700: "#0B6165",
+          800: "#094F53",
+          900: "#073D41",
+          DEFAULT: "#0D7377",
           foreground: "#FFFFFF",
         },
-        // Professional Neutral System (Slate)
+        // Neutral System
         slate: {
-          50: "#F8FAFC",
-          100: "#F1F5F9",
-          200: "#E2E8F0",
-          300: "#CBD5E1",
-          400: "#94A3B8",
-          500: "#64748B",
-          600: "#475569", // Secondary text - WCAG AA
-          700: "#334155", // Body text - WCAG AAA
-          800: "#1E293B", // Headings - WCAG AAA
-          900: "#0F172A", // Primary text - WCAG AAA
+          50: "#F5F5F5",
+          100: "#EEEEEE",
+          200: "#CCCCCC",
+          300: "#AAAAAA",
+          400: "#888888",  // caption / hint
+          500: "#666666",
+          600: "#444444",  // body text
+          700: "#333333",
+          800: "#222222",
+          900: "#111111",  // headline text
         },
         // Legacy support (mapped to slate)
         gray: {
-          50: "#F8FAFC",
-          100: "#F1F5F9",
-          200: "#E2E8F0",
-          300: "#CBD5E1",
-          400: "#94A3B8",
-          500: "#64748B",
-          600: "#475569",
-          700: "#334155",
-          800: "#1E293B",
-          900: "#0F172A",
+          50: "#F5F5F5",
+          100: "#EEEEEE",
+          200: "#CCCCCC",
+          300: "#AAAAAA",
+          400: "#888888",
+          500: "#666666",
+          600: "#444444",
+          700: "#333333",
+          800: "#222222",
+          900: "#111111",
         },
         // Semantic colors
-        background: "#F6F5F2",
-        foreground: "#0F172A",
+        background: "#F5F5F5",
+        foreground: "#111111",
         secondary: {
-          DEFAULT: "#F1F5F9",
-          foreground: "#0F172A",
+          DEFAULT: "#EEEEEE",
+          foreground: "#111111",
         },
         accent: {
-          DEFAULT: "#F1F5F9",
-          foreground: "#0F172A",
+          DEFAULT: "#EEEEEE",
+          foreground: "#111111",
         },
         muted: {
-          DEFAULT: "#F1F0EC",
-          foreground: "#64748B",
+          DEFAULT: "#EEEEEE",
+          foreground: "#888888",
         },
-        border: "#E6E4DD",
-        input: "#E6E4DD",
-        ring: "#2E56D4",
+        border: "#E0E0E0",
+        input: "#E0E0E0",
+        ring: "#0D7377",
         destructive: {
-          DEFAULT: "#EF4444",
+          DEFAULT: "#DC2626",
           foreground: "#FFFFFF",
         },
         card: {
-          DEFAULT: "#FAF8F3",
-          foreground: "#0F172A",
+          DEFAULT: "#FFFFFF",
+          foreground: "#111111",
         },
+        // Semantic accent tokens
+        whatsapp: "#25D366",
+        heart: "#DC2626",
       },
       borderRadius: {
         none: "0",
-        sm: "0.375rem",
-        DEFAULT: "0.5rem",
-        md: "0.625rem",
-        lg: "0.75rem",
-        xl: "1rem",
-        "2xl": "1.25rem",
-        "3xl": "1.5rem",
-        full: "9999px",
+        sm: "0.25rem",     // 4px
+        DEFAULT: "0.375rem", // 6px
+        md: "0.5rem",      // 8px
+        lg: "0.625rem",    // 10px
+        xl: "0.75rem",     // 12px — cards / controls
+        "2xl": "0.75rem",  // 12px — cards (same as xl for flat look)
+        "3xl": "1.375rem", // 22px — pill buttons
+        full: "9999px",    // circles
       },
       boxShadow: {
         sm: "0 1px 2px 0 rgb(0 0 0 / 0.05)",
@@ -97,32 +100,25 @@ const config: Config = {
         xl: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)",
         "2xl": "0 25px 50px -12px rgb(0 0 0 / 0.25)",
         inner: "inset 0 2px 4px 0 rgb(0 0 0 / 0.05)",
-        soft: "0 2px 8px 0 rgb(0 0 0 / 0.08), 0 1px 2px 0 rgb(0 0 0 / 0.06)",
-        "soft-md": "0 4px 12px 0 rgb(0 0 0 / 0.08), 0 2px 4px 0 rgb(0 0 0 / 0.06)",
-        "soft-lg": "0 8px 24px 0 rgb(0 0 0 / 0.08), 0 4px 8px 0 rgb(0 0 0 / 0.06)",
-        "soft-xl": "0 12px 32px 0 rgb(0 0 0 / 0.1), 0 6px 12px 0 rgb(0 0 0 / 0.08)",
+        soft: "0 2px 8px 0 rgb(0 0 0 / 0.06), 0 1px 2px 0 rgb(0 0 0 / 0.04)",
+        "soft-md": "0 4px 12px 0 rgb(0 0 0 / 0.06), 0 2px 4px 0 rgb(0 0 0 / 0.04)",
+        "soft-lg": "0 8px 24px 0 rgb(0 0 0 / 0.06), 0 4px 8px 0 rgb(0 0 0 / 0.04)",
+        "soft-xl": "0 12px 32px 0 rgb(0 0 0 / 0.08), 0 6px 12px 0 rgb(0 0 0 / 0.06)",
         none: "none",
       },
       fontFamily: {
         sans: [
-          "var(--font-inter)",
+          "var(--font-noto-sans-arabic)",
+          "Noto Sans Arabic",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
           "Segoe UI",
-          "Roboto",
-          "Oxygen",
-          "Ubuntu",
-          "Cantarell",
-          "Fira Sans",
-          "Droid Sans",
-          "Helvetica Neue",
           "sans-serif",
         ],
         display: [
-          "var(--font-inter)",
-          "-apple-system",
-          "BlinkMacSystemFont",
+          "var(--font-noto-sans-arabic)",
+          "Noto Sans Arabic",
           "sans-serif",
         ],
       },
@@ -145,6 +141,7 @@ const config: Config = {
         semibold: "600",
         bold: "700",
         extrabold: "800",
+        black: "900",
       },
       letterSpacing: {
         tighter: "-0.05em",
@@ -162,10 +159,12 @@ const config: Config = {
         relaxed: "1.625",
         loose: "2",
       },
+      transitionDuration: {
+        "150": "140ms", // map 150ms → ~0.14s (within 0.12–0.16s range)
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
 };
 
 export default config;
-

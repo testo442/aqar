@@ -1,5 +1,6 @@
 "use client"
 
+import { useState, useEffect, useRef } from "react"
 import dynamic from "next/dynamic"
 import Image from "next/image"
 import Link from "next/link"
@@ -15,6 +16,7 @@ import {
   MapPin,
   Clock,
   ShieldCheck,
+  Eye,
 } from "lucide-react"
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon"
 import AppHeader from "@/components/v2/AppHeader"
@@ -22,6 +24,7 @@ import BottomNav from "@/components/v2/BottomNav"
 import { useLanguage } from "@/app/providers"
 import { propertyDetail as s } from "@/components/v2/v2Styles"
 import { getPropertyById } from "@/lib/mock-listings"
+import { recordView } from "@/lib/view-tracking"
 
 const MapView = dynamic(() => import("@/components/MapView"), { ssr: false })
 
@@ -37,6 +40,16 @@ export default function PropertyDetailsPage({ params }: PageProps) {
   const { lang } = useLanguage()
   const isRTL = lang === "ar"
   const p = getPropertyById(params.id)
+
+  // View count tracking
+  const [viewCount, setViewCount] = useState<number | null>(null)
+  const tracked = useRef(false)
+
+  useEffect(() => {
+    if (!p || tracked.current) return
+    tracked.current = true
+    recordView(p.id).then(({ views }) => setViewCount(views))
+  }, [p])
 
   // Not found state
   if (!p) {
@@ -162,6 +175,12 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 {isRTL ? "موثّق" : "Verified"}
               </span>
             )}
+            {viewCount !== null && viewCount > 0 && (
+              <span className={s.metaPill}>
+                <Eye className={s.metaIcon} />
+                {viewCount} {isRTL ? "مشاهدة" : viewCount === 1 ? "view" : "views"}
+              </span>
+            )}
           </div>
         </div>
 
@@ -170,7 +189,7 @@ export default function PropertyDetailsPage({ params }: PageProps) {
           <div className="flex flex-col gap-2">
             <button
               type="button"
-              className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+              className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <CalendarCheck className="h-4 w-4" />
               {isRTL ? "حجز معاينة" : "Book Viewing"}
@@ -180,14 +199,14 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 href="https://wa.me/96500000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 {isRTL ? "واتساب" : "WhatsApp"}
               </a>
               <a
                 href="tel:+96500000000"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <Phone className="h-4 w-4" />
                 {isRTL ? "اتصال" : "Call"}
@@ -196,7 +215,7 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <Navigation className="h-4 w-4" />
                 {isRTL ? "اتجاهات" : "Directions"}

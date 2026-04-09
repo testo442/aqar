@@ -171,7 +171,7 @@ export default function PropertyDetailV2Page() {
           <div className="flex flex-col gap-2">
             <button
               type="button"
-              className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors flex items-center justify-center gap-2"
+              className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <CalendarCheck className="h-4 w-4" />
               {isRTL ? "حجز معاينة" : "Book Viewing"}
@@ -181,14 +181,14 @@ export default function PropertyDetailV2Page() {
                 href="https://wa.me/96500000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 {isRTL ? "واتساب" : "WhatsApp"}
               </a>
               <a
                 href="tel:+96500000000"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <Phone className="h-4 w-4" />
                 {isRTL ? "اتصال" : "Call"}
@@ -197,7 +197,7 @@ export default function PropertyDetailV2Page() {
                 href={mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-700 transition-colors flex items-center justify-center gap-2"
+                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <Navigation className="h-4 w-4" />
                 {isRTL ? "اتجاهات" : "Directions"}

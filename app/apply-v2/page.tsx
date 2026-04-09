@@ -210,7 +210,7 @@ export default function ApplyV2Page() {
         <AppHeader />
         <div className={p.container}>
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <CheckCircle className="h-14 w-14 text-emerald-500 mb-4" strokeWidth={1.5} />
+            <CheckCircle className="h-14 w-14 text-primary-600 mb-4" strokeWidth={1.5} />
             <h2 className="text-xl font-bold text-slate-900 mb-2">
               {isRTL ? "تم الإرسال بنجاح" : "Submitted Successfully"}
             </h2>

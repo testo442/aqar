@@ -630,14 +630,14 @@ export default function ChaletDetailPage() {
               href="https://wa.me/96500000000"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-600 text-sm font-semibold transition-colors duration-150"
             >
               <WhatsAppIcon className="h-4 w-4" />
               {isRTL ? "واتساب" : "WhatsApp"}
             </a>
             <a
               href="tel:+96500000000"
-              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-700 text-sm font-semibold transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 h-10 rounded-xl border border-border bg-card hover:bg-muted text-slate-600 text-sm font-semibold transition-colors duration-150"
             >
               <Phone className="h-4 w-4" />
               {isRTL ? "اتصال" : "Call"}

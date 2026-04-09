@@ -84,12 +84,12 @@ const createCustomIcon = (color: string, isHighlighted: boolean) => {
 // -----------------------------
 const createPricePillIcon = (price: number, selected: boolean) => {
   const text = `${price.toLocaleString()} KD`
-  const bg = selected ? "#2E56D4" : "#fff"
-  const color = selected ? "#fff" : "#2E56D4"
-  const border = selected ? "#2248BA" : "#2E56D4"
+  const bg = selected ? "#0D7377" : "#fff"
+  const color = selected ? "#fff" : "#0D7377"
+  const border = selected ? "#0B6165" : "#0D7377"
   const shadow = selected
-    ? "0 3px 10px rgba(46,86,212,0.4)"
-    : "0 1px 4px rgba(0,0,0,0.12), 0 0 0 1px rgba(46,86,212,0.15)"
+    ? "0 3px 10px rgba(13,115,119,0.4)"
+    : "0 1px 4px rgba(0,0,0,0.12), 0 0 0 1px rgba(13,115,119,0.15)"
   const scale = selected ? "scale(1.08)" : "scale(1)"
   const weight = selected ? "700" : "600"
   // Estimate pill width: ~7px per char + 20px horizontal padding + 3px border
@@ -103,7 +103,7 @@ const createPricePillIcon = (price: number, selected: boolean) => {
       height:${estHeight}px;padding:0 10px;
       background:${bg};color:${color};border:1.5px solid ${border};
       border-radius:9999px;font-size:11px;font-weight:${weight};
-      font-family:var(--font-inter),system-ui,sans-serif;
+      font-family:var(--font-noto-sans-arabic),system-ui,sans-serif;
       white-space:nowrap;box-shadow:${shadow};cursor:pointer;
       transition:all .15s ease;transform:${scale};
       pointer-events:auto;line-height:1;
@@ -458,10 +458,10 @@ export default function MapView({
 
       const color =
         property.id === selectedPropertyId
-          ? "#1D4ED8"
+          ? "#0B6165"
           : property.type === "buy"
-          ? "#2563EB"
-          : "#60A5FA"
+          ? "#0D7377"
+          : "#0F8A8F"
 
       // Use price pills when zoomed in + few visible listings (non-preview only)
       const icon =

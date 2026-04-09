@@ -1,17 +1,14 @@
 import './globals.css'
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Noto_Sans_Arabic } from 'next/font/google'
 import { cookies } from 'next/headers'
 import { LanguageProvider } from './providers'
 import { HtmlAttributes } from './html-attributes'
-// Old V1 Header/Footer kept but no longer rendered (V2 pages use AppHeader + BottomNav)
-// import Header from '@/components/Header'
-// import Footer from '@/components/Footer'
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-inter',
+const notoSansArabic = Noto_Sans_Arabic({
+  subsets: ['arabic'],
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-noto-sans-arabic',
 })
 
 export const metadata: Metadata = {
@@ -24,15 +21,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  // Read language cookie on server
+  // Read language cookie on server — default to Arabic (RTL)
   const cookieStore = await cookies()
   const langCookie = cookieStore.get("aqarna_lang")
-  const initialLang = langCookie?.value === "ar" ? "ar" : "en"
+  const initialLang = langCookie?.value === "en" ? "en" : "ar"
   const initialDir = initialLang === "ar" ? "rtl" : "ltr"
 
   return (
     <html lang={initialLang} dir={initialDir} suppressHydrationWarning>
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${notoSansArabic.variable} font-sans antialiased`}>
         <LanguageProvider initialLang={initialLang}>
           <HtmlAttributes />
           {children}
