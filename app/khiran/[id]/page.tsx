@@ -26,6 +26,7 @@ import {
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
+import ImageLightbox from "@/components/v2/ImageLightbox"
 import { useLanguage } from "@/app/providers"
 import { chaletDetail as s } from "@/components/v2/v2Styles"
 import {
@@ -135,6 +136,7 @@ export default function ChaletDetailPage() {
   const isRTL = lang === "ar"
 
   const [heroIdx, setHeroIdx] = useState(0)
+  const [lightboxOpen, setLightboxOpen] = useState(false)
   const [activePackage, setActivePackage] = useState<PackageKey>("weekend")
 
   // Calendar state
@@ -324,39 +326,52 @@ export default function ChaletDetailPage() {
           </Link>
         </div>
 
-        {/* Hero image */}
-        <div className={s.heroWrap} style={s.heroAspect}>
-          <Image
-            src={allImages[heroIdx]}
-            alt={displayTitle}
-            fill
-            className={s.heroImage}
-            sizes="(max-width: 480px) 100vw, 480px"
-            priority
-          />
-          <div className={s.heroOverlay} />
-
-          {/* Share */}
-          <button type="button" className={s.heroShare} aria-label="Share">
-            <Share2 className={s.heroShareIcon} />
+        {/* Hero image — tap to open fullscreen viewer */}
+        <div className={`${s.heroWrap} relative`} style={s.heroAspect}>
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(true)}
+            className="absolute inset-0 block p-0 border-0 bg-transparent cursor-pointer"
+            aria-label={isRTL ? "عرض الصور" : "View photos"}
+          >
+            <Image
+              src={allImages[heroIdx]}
+              alt={displayTitle}
+              fill
+              className={s.heroImage}
+              sizes="(max-width: 480px) 100vw, 480px"
+              priority
+            />
+            <div className={s.heroOverlay} />
+            {allImages.length > 1 && (
+              <span className={s.heroCounter}>
+                {heroIdx + 1} / {allImages.length}
+              </span>
+            )}
           </button>
 
-          {/* Photo counter */}
-          {allImages.length > 1 && (
-            <span className={s.heroCounter}>
-              {heroIdx + 1} / {allImages.length}
-            </span>
-          )}
+          {/* Share (above the image button so it stays clickable) */}
+          <button
+            type="button"
+            className={`${s.heroShare} z-10`}
+            aria-label="Share"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Share2 className={s.heroShareIcon} />
+          </button>
         </div>
 
-        {/* Thumbnail strip */}
+        {/* Thumbnail strip — tap opens the fullscreen viewer at that index */}
         {allImages.length > 1 && (
           <div className={s.thumbStrip}>
             {allImages.map((img, i) => (
               <button
                 key={i}
                 type="button"
-                onClick={() => setHeroIdx(i)}
+                onClick={() => {
+                  setHeroIdx(i)
+                  setLightboxOpen(true)
+                }}
                 className={i === heroIdx ? s.thumbActive : s.thumb}
               >
                 <Image src={img} alt="" fill className={s.thumbImage} sizes="64px" />
@@ -709,6 +724,15 @@ export default function ChaletDetailPage() {
       </div>
 
       <BottomNav />
+
+      {/* Fullscreen image lightbox */}
+      <ImageLightbox
+        images={allImages}
+        startIndex={heroIdx}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        alt={displayTitle}
+      />
     </div>
   )
 }

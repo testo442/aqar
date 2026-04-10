@@ -8,6 +8,7 @@ export interface Property {
   area: number
   image: string
   type: "buy" | "rent"
+  propertyType?: string
   lat?: number
   lng?: number
   // Optional i18n fields

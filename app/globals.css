@@ -2,13 +2,32 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Leaflet popup styling */
+/* Leaflet popup styling — premium compact callout */
 .custom-popup .leaflet-popup-content-wrapper {
   padding: 0;
-  border-radius: 0.75rem;
+  border-radius: 10px;
+  background: #ffffff;
+  box-shadow:
+    0 10px 24px -10px rgba(13, 115, 119, 0.28),
+    0 3px 8px -2px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(13, 115, 119, 0.08);
 }
 .custom-popup .leaflet-popup-content {
   margin: 0;
+  width: auto !important;
+}
+.custom-popup .leaflet-popup-tip-container {
+  width: 18px;
+  height: 9px;
+  margin-left: -9px;
+}
+.custom-popup .leaflet-popup-tip {
+  width: 10px;
+  height: 10px;
+  background: #ffffff;
+  box-shadow:
+    0 3px 8px -2px rgba(15, 23, 42, 0.08),
+    0 0 0 1px rgba(13, 115, 119, 0.08);
 }
 
 /* Leaflet Map Styles */

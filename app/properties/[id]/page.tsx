@@ -21,6 +21,7 @@ import {
 import WhatsAppIcon from "@/components/icons/WhatsAppIcon"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
+import ImageLightbox from "@/components/v2/ImageLightbox"
 import { useLanguage } from "@/app/providers"
 import { propertyDetail as s } from "@/components/v2/v2Styles"
 import { getPropertyById } from "@/lib/mock-listings"
@@ -44,6 +45,9 @@ export default function PropertyDetailsPage({ params }: PageProps) {
   // View count tracking
   const [viewCount, setViewCount] = useState<number | null>(null)
   const tracked = useRef(false)
+
+  // Image lightbox
+  const [lightboxOpen, setLightboxOpen] = useState(false)
 
   useEffect(() => {
     if (!p || tracked.current) return
@@ -122,8 +126,14 @@ export default function PropertyDetailsPage({ params }: PageProps) {
           </Link>
         </div>
 
-        {/* Hero image */}
-        <div className={s.heroWrap} style={s.heroAspect}>
+        {/* Hero image — tap to open fullscreen gallery */}
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          className={`${s.heroWrap} block p-0 border-0 bg-transparent cursor-pointer`}
+          style={s.heroAspect}
+          aria-label={isRTL ? "عرض الصور" : "View photos"}
+        >
           <Image
             src={p.images[0]}
             alt={displayTitle}
@@ -138,7 +148,7 @@ export default function PropertyDetailsPage({ params }: PageProps) {
               1 / {p.images.length}
             </span>
           )}
-        </div>
+        </button>
 
         {/* Title / price / facts */}
         <div className={s.infoSection}>
@@ -199,7 +209,7 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 href="https://wa.me/96500000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex-1 h-11 rounded-2xl border border-border bg-card hover:bg-muted text-sm font-semibold text-slate-600 transition-colors duration-150 flex items-center justify-center gap-2"
+                className="flex-[1.3] h-11 rounded-2xl border border-primary-200 bg-primary-50 hover:bg-primary-100 text-sm font-semibold text-primary-700 transition-colors duration-150 flex items-center justify-center gap-2"
               >
                 <WhatsAppIcon className="h-4 w-4" />
                 {isRTL ? "واتساب" : "WhatsApp"}
@@ -221,6 +231,11 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 {isRTL ? "اتجاهات" : "Directions"}
               </a>
             </div>
+            <p className="text-[11px] text-slate-400 text-center rtl:text-[12px]">
+              {isRTL
+                ? "أسرع طريقة للتواصل مع المعلن: واتساب"
+                : "Fastest way to reach the advertiser: WhatsApp"}
+            </p>
           </div>
         </div>
 
@@ -322,6 +337,14 @@ export default function PropertyDetailsPage({ params }: PageProps) {
       </div>
 
       <BottomNav />
+
+      {/* Fullscreen image lightbox */}
+      <ImageLightbox
+        images={p.images}
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        alt={displayTitle}
+      />
     </div>
   )
 }

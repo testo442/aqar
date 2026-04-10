@@ -55,43 +55,36 @@ export default function MiniListingCard({
         />
       </div>
 
-      {/* Body */}
+      {/* Body — fixed vertical structure so every card aligns */}
       <div className={s.body}>
+        {/* Row 1: title */}
         <h3 className={s.title}>{displayTitle}</h3>
 
+        {/* Row 2: price */}
         <div className={s.priceRow} dir="ltr">
           <span className={s.price}>{price.toLocaleString()} KD</span>
           <span className={s.priceSuffix}> / mo</span>
         </div>
 
-        {/* Rating / verified row */}
+        {/* Row 3: rating / verified (always present, empty if no data) */}
         <div className={s.ratingRow}>
           {verified ? (
             <>
               <span className={s.verifiedIcon}>✓</span>
-              <span className={s.ratingText}>{beds} Bed - {area} m²</span>
+              <span className={s.ratingText}>{lang === "ar" ? "موثّق" : "Verified"}</span>
             </>
-          ) : stars > 0 && rating ? (
-            <>
-              <span className="flex gap-px">
-                {Array.from({ length: stars }).map((_, i) => (
-                  <span key={i} className={s.star}>★</span>
-                ))}
-              </span>
-              <span className={s.ratingText}>{rating.toFixed(1)}</span>
-            </>
-          ) : stars > 0 ? (
+          ) : rating ? (
             <>
               <span className={s.star}>★</span>
-              <span className={s.ratingText}>{beds} Bed - {area} m²</span>
+              <span className={s.ratingText}>{rating.toFixed(1)}</span>
             </>
           ) : null}
         </div>
 
-        {/* Meta row */}
-        <p className={s.metaRow}>{beds} Bed - {area} m²</p>
+        {/* Row 4: specs/meta */}
+        <p className={s.metaRow}>{beds} Bed · {area} m²</p>
 
-        {/* Location chip */}
+        {/* Row 5: location chip (pushed to bottom via mt-auto) */}
         <div className={s.chipWrap}>
           <span className={s.chip}>
             {displayLocation}

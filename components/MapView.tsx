@@ -5,6 +5,7 @@ import Link from "next/link"
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
+import { ChevronRight } from "lucide-react"
 import type { Property } from "@/types/property"
 import { sanitizeLatLng, logInvalidCoords } from "@/lib/geo"
 import { useLanguage } from "@/app/providers"
@@ -485,28 +486,36 @@ export default function MapView({
           {!isPreview && (
             <Popup
               key={property.id}
-              maxWidth={220}
+              maxWidth={200}
+              minWidth={168}
               className="custom-popup"
+              closeButton={false}
               autoClose={true}
               closeOnClick={true}
+              offset={[0, -4]}
             >
-              <div className="p-2">
-                <h3 className="font-semibold text-xs text-slate-900 mb-1 line-clamp-2">{property.title}</h3>
-                <p className="text-xs font-bold text-primary-600 mb-2 tabular-nums">
+              <Link
+                href={`/properties/${property.id}`}
+                className="group block px-2.5 py-1.5 w-[172px]"
+              >
+                <p className="text-[14px] font-black text-primary-600 tabular-nums leading-none tracking-tight">
                   {new Intl.NumberFormat("en-KW", {
                     style: "currency",
                     currency: "KWD",
                     minimumFractionDigits: 0,
                   }).format(property.price)}
-                  {property.type === "rent" && " /month"}
+                  {property.type === "rent" && (
+                    <span className="text-[10px] font-medium text-primary-600/60 tracking-normal"> /mo</span>
+                  )}
                 </p>
-                <Link
-                  href={`/properties/${property.id}`}
-                  className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors underline"
-                >
-                  {t("viewDetails", lang)}
-                </Link>
-              </div>
+                <h3 className="mt-[3px] text-[11px] font-medium text-slate-500 line-clamp-1 leading-none">
+                  {property.title}
+                </h3>
+                <div className="mt-1 inline-flex items-center gap-0.5 text-[10.5px] font-semibold text-primary-600 group-hover:text-primary-700 transition-colors duration-150 leading-none">
+                  <span>{t("viewDetails", lang)}</span>
+                  <ChevronRight className="h-3 w-3 rtl:rotate-180 -mr-0.5" />
+                </div>
+              </Link>
             </Popup>
           )}
         </Marker>
