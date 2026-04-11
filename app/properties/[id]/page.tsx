@@ -132,14 +132,18 @@ export default function PropertyDetailsPage({ params }: PageProps) {
           onClick={() => setLightboxOpen(true)}
           className={`${s.heroWrap} block p-0 border-0 bg-transparent cursor-pointer`}
           style={s.heroAspect}
-          aria-label={isRTL ? "عرض الصور" : "View photos"}
+          aria-label={
+            isRTL
+              ? `عرض صور العقار (${p.images.length})`
+              : `View property photos (${p.images.length})`
+          }
         >
           <Image
             src={p.images[0]}
             alt={displayTitle}
             fill
             className={s.heroImage}
-            sizes="(max-width: 480px) 100vw, 480px"
+            sizes="(max-width: 600px) 100vw, 600px"
             priority
           />
           <div className={s.heroOverlay} />
@@ -231,7 +235,7 @@ export default function PropertyDetailsPage({ params }: PageProps) {
                 {isRTL ? "اتجاهات" : "Directions"}
               </a>
             </div>
-            <p className="text-[11px] text-slate-400 text-center rtl:text-[12px]">
+            <p className="text-[11px] text-slate-500 text-center rtl:text-[12px]">
               {isRTL
                 ? "أسرع طريقة للتواصل مع المعلن: واتساب"
                 : "Fastest way to reach the advertiser: WhatsApp"}

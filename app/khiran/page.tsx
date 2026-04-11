@@ -192,7 +192,7 @@ export default function KhiranPage() {
           <SlidersHorizontal className={`${kp.filterChipIcon} mt-1.5 flex-shrink-0 text-slate-400`} />
           {/* Max price input */}
           <div className="flex-shrink-0 flex items-center gap-1">
-            <span className="text-[11px] text-slate-400">{isRTL ? "حتى" : "Max"}</span>
+            <span className="text-[11px] text-slate-500">{isRTL ? "حتى" : "Max"}</span>
             <input
               type="number"
               inputMode="numeric"
@@ -203,7 +203,7 @@ export default function KhiranPage() {
             />
           </div>
           <span className="w-px h-5 bg-border flex-shrink-0 self-center" />
-          <span className="text-[11px] text-slate-400 flex-shrink-0 self-center">
+          <span className="text-[11px] text-slate-500 flex-shrink-0 self-center">
             {isRTL ? "غرف:" : "Beds:"}
           </span>
           {bedOptions.map((opt) => (
@@ -217,7 +217,7 @@ export default function KhiranPage() {
             </button>
           ))}
           <span className="w-px h-5 bg-border flex-shrink-0 self-center" />
-          <span className="text-[11px] text-slate-400 flex-shrink-0 self-center">
+          <span className="text-[11px] text-slate-500 flex-shrink-0 self-center">
             {isRTL ? "حمام:" : "Baths:"}
           </span>
           {bathOptions.map((opt) => (

@@ -344,7 +344,7 @@ export default function SellPage() {
             {/* Email */}
             <div>
               <label htmlFor="email" className={`block text-sm font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                {t("email", lang)} <span className="text-slate-400 text-xs">({t("optional", lang)})</span>
+                {t("email", lang)} <span className="text-slate-500 text-xs">({t("optional", lang)})</span>
               </label>
               <Input
                 id="email"
@@ -550,7 +550,7 @@ export default function SellPage() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="bedrooms" className={`block text-sm font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                  {t("bedroomsLabel", lang)} <span className="text-slate-400 text-xs">({t("optional", lang)})</span>
+                  {t("bedroomsLabel", lang)} <span className="text-slate-500 text-xs">({t("optional", lang)})</span>
                 </label>
                 <Input
                   id="bedrooms"
@@ -562,7 +562,7 @@ export default function SellPage() {
               </div>
               <div>
                 <label htmlFor="bathrooms" className={`block text-sm font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                  {t("bathroomsLabel", lang)} <span className="text-slate-400 text-xs">({t("optional", lang)})</span>
+                  {t("bathroomsLabel", lang)} <span className="text-slate-500 text-xs">({t("optional", lang)})</span>
                 </label>
                 <Input
                   id="bathrooms"
@@ -602,7 +602,7 @@ export default function SellPage() {
             {/* Notes */}
             <div>
               <label htmlFor="notes" className={`block text-sm font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                {t("notes", lang)} <span className="text-slate-400 text-xs">({t("optional", lang)})</span>
+                {t("notes", lang)} <span className="text-slate-500 text-xs">({t("optional", lang)})</span>
               </label>
               <textarea
                 id="notes"
@@ -617,7 +617,7 @@ export default function SellPage() {
             {/* Image Links */}
             <div>
               <label htmlFor="imageLinks" className={`block text-sm font-medium text-slate-700 mb-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
-                {t("imageLinks", lang)} <span className="text-slate-400 text-xs">({t("optional", lang)})</span>
+                {t("imageLinks", lang)} <span className="text-slate-500 text-xs">({t("optional", lang)})</span>
               </label>
               <textarea
                 id="imageLinks"

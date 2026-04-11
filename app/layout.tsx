@@ -7,8 +7,11 @@ import { HtmlAttributes } from './html-attributes'
 
 const notoSansArabic = Noto_Sans_Arabic({
   subsets: ['arabic'],
-  weight: ['400', '500', '600', '700', '800', '900'],
+  // Only ship weights actually used by the V2 design system
+  // (400 body, 500 medium, 600 semibold, 700 bold, 900 black headlines)
+  weight: ['400', '500', '600', '700', '900'],
   variable: '--font-noto-sans-arabic',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

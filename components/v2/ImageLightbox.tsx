@@ -81,10 +81,10 @@ export default function ImageLightbox({
       <button
         type="button"
         onClick={onClose}
-        className="absolute top-4 right-4 z-10 h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-colors duration-150"
+        className="absolute top-4 right-4 z-10 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-colors duration-150"
         aria-label="Close"
       >
-        <X className="h-5 w-5" />
+        <X className="h-5 w-5" aria-hidden />
       </button>
 
       {/* Counter */}
@@ -100,7 +100,7 @@ export default function ImageLightbox({
           className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-10 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm items-center justify-center text-white transition-colors duration-150"
           aria-label="Previous image"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-6 w-6" aria-hidden />
         </button>
       )}
 
@@ -127,7 +127,7 @@ export default function ImageLightbox({
           className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-10 h-11 w-11 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm items-center justify-center text-white transition-colors duration-150"
           aria-label="Next image"
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-6 w-6" aria-hidden />
         </button>
       )}
     </div>

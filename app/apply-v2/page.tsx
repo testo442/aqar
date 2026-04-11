@@ -19,7 +19,7 @@ const SellMapPicker = dynamic(() => import("@/app/sell/SellMapPicker"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-[220px] rounded-2xl border border-border bg-muted flex items-center justify-center">
-      <span className="text-xs text-slate-400">Loading map...</span>
+      <span className="text-xs text-slate-500">Loading map...</span>
     </div>
   ),
 })
@@ -251,7 +251,7 @@ export default function ApplyV2Page() {
             <h1 className="text-lg font-bold text-slate-900 rtl:text-[20px]">
               {isRTL ? "أضف عقارك" : "Submit Your Property"}
             </h1>
-            <p className="text-xs text-slate-400 mt-1 rtl:text-[13px]">
+            <p className="text-xs text-slate-500 mt-1 rtl:text-[13px]">
               {isRTL
                 ? "أدخل التفاصيل وسيتواصل فريقنا معك للمراجعة والنشر"
                 : "Fill in the details below. Our team will review and reach out to get your listing live."}

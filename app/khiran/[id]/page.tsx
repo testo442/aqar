@@ -339,7 +339,7 @@ export default function ChaletDetailPage() {
               alt={displayTitle}
               fill
               className={s.heroImage}
-              sizes="(max-width: 480px) 100vw, 480px"
+              sizes="(max-width: 600px) 100vw, 600px"
               priority
             />
             <div className={s.heroOverlay} />
@@ -354,10 +354,10 @@ export default function ChaletDetailPage() {
           <button
             type="button"
             className={`${s.heroShare} z-10`}
-            aria-label="Share"
+            aria-label={isRTL ? "مشاركة" : "Share"}
             onClick={(e) => e.stopPropagation()}
           >
-            <Share2 className={s.heroShareIcon} />
+            <Share2 className={s.heroShareIcon} aria-hidden />
           </button>
         </div>
 
@@ -373,6 +373,12 @@ export default function ChaletDetailPage() {
                   setLightboxOpen(true)
                 }}
                 className={i === heroIdx ? s.thumbActive : s.thumb}
+                aria-label={
+                  isRTL
+                    ? `عرض الصورة ${i + 1} من ${allImages.length}`
+                    : `View photo ${i + 1} of ${allImages.length}`
+                }
+                aria-current={i === heroIdx ? "true" : undefined}
               >
                 <Image src={img} alt="" fill className={s.thumbImage} sizes="64px" />
               </button>
@@ -514,12 +520,22 @@ export default function ChaletDetailPage() {
           <div className={s.calendarCard}>
             {/* Month nav */}
             <div className={s.calendarNav}>
-              <button type="button" onClick={prevMonth} className={s.calendarNavBtn}>
-                <ChevronLeft className={s.calendarNavIcon} />
+              <button
+                type="button"
+                onClick={prevMonth}
+                className={s.calendarNavBtn}
+                aria-label={isRTL ? "الشهر السابق" : "Previous month"}
+              >
+                <ChevronLeft className={s.calendarNavIcon} aria-hidden />
               </button>
               <span className={s.calendarMonth}>{monthName} {calYear}</span>
-              <button type="button" onClick={nextMonth} className={s.calendarNavBtn}>
-                <ChevronRight className={s.calendarNavIcon} />
+              <button
+                type="button"
+                onClick={nextMonth}
+                className={s.calendarNavBtn}
+                aria-label={isRTL ? "الشهر التالي" : "Next month"}
+              >
+                <ChevronRight className={s.calendarNavIcon} aria-hidden />
               </button>
             </div>
 
@@ -624,7 +640,7 @@ export default function ChaletDetailPage() {
                   </div>
                 </>
               ) : (
-                <p className="text-xs text-slate-400">
+                <p className="text-xs text-slate-500">
                   {isRTL ? "اختر تاريخ المغادرة" : "Select check-out date"}
                 </p>
               )}
@@ -637,7 +653,7 @@ export default function ChaletDetailPage() {
         {/* Contact the host */}
         <div className={s.descSection}>
           <h2 className={s.descTitle}>{isRTL ? "تواصل مع المالك" : "Contact Host"}</h2>
-          <p className="text-xs text-slate-400 mb-3 rtl:text-[13px]">
+          <p className="text-xs text-slate-500 mb-3 rtl:text-[13px]">
             {isRTL ? "لديك سؤال قبل الحجز؟" : "Have a question before booking?"}
           </p>
           <div className="flex gap-2">
