@@ -3,6 +3,7 @@
 import { useState, useRef, FormEvent } from "react"
 import dynamic from "next/dynamic"
 import Link from "next/link"
+import Image from "next/image"
 import { MapPin, Camera, Loader2, CheckCircle } from "lucide-react"
 import AppHeader from "@/components/v2/AppHeader"
 import BottomNav from "@/components/v2/BottomNav"
@@ -144,9 +145,13 @@ export default function ApplyV2Page() {
   const handleMapReady = (map: L.Map) => { mapRef.current = map }
 
   const handlePhotoAdd = () => {
-    // Placeholder: in production, open file picker
-    const placeholder = `https://images.unsplash.com/photo-${1600596542815 + photos.length}?w=200&q=60`
-    setPhotos((prev) => [...prev, placeholder])
+    // Placeholder: cycles through a few valid photos until the real file picker is wired up
+    const PLACEHOLDERS = [
+      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&q=60",
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=200&q=60",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&q=60",
+    ]
+    setPhotos((prev) => [...prev, PLACEHOLDERS[prev.length % PLACEHOLDERS.length]])
   }
 
   const validate = (): boolean => {
@@ -447,7 +452,7 @@ export default function ApplyV2Page() {
             <div>
               <label className={ap.label}>
                 {isRTL ? "القطعة / الشارع" : "Block / Street"}
-                <span className="text-slate-300 font-normal ltr:ml-1 rtl:mr-1">({isRTL ? "اختياري" : "optional"})</span>
+                <span className="text-slate-500 font-normal ltr:ml-1 rtl:mr-1">({isRTL ? "اختياري" : "optional"})</span>
               </label>
               <input
                 type="text"
@@ -484,7 +489,7 @@ export default function ApplyV2Page() {
             <div className={ap.photoGrid}>
               {photos.map((src, i) => (
                 <div key={i} className={ap.photoSlot}>
-                  <img src={src} alt="" className="w-full h-full object-cover" />
+                  <Image src={src} alt="" fill sizes="80px" className="object-cover" />
                 </div>
               ))}
               <button type="button" onClick={handlePhotoAdd} className={ap.photoAdd}>
@@ -541,7 +546,7 @@ export default function ApplyV2Page() {
             <div>
               <label className={ap.label}>
                 {isRTL ? "البريد الإلكتروني" : "Email"}
-                <span className="text-slate-300 font-normal ltr:ml-1 rtl:mr-1">({isRTL ? "اختياري" : "optional"})</span>
+                <span className="text-slate-500 font-normal ltr:ml-1 rtl:mr-1">({isRTL ? "اختياري" : "optional"})</span>
               </label>
               <input
                 type="email"
@@ -571,7 +576,7 @@ export default function ApplyV2Page() {
           {errors.terms && <p className={ap.errorText}>{errors.terms}</p>}
 
           {/* ── Actions ───────────────────────────────────────────────────── */}
-          <div className="space-y-2.5 pt-1">
+          <div className="pt-1">
             <button type="submit" disabled={isSubmitting} className={ap.submitBtn}>
               {isSubmitting ? (
                 <span className="inline-flex items-center gap-2">
@@ -581,9 +586,6 @@ export default function ApplyV2Page() {
               ) : (
                 isRTL ? "إرسال العقار" : "Submit Property"
               )}
-            </button>
-            <button type="button" className={ap.draftBtn}>
-              {isRTL ? "حفظ كمسودة" : "Save Draft"}
             </button>
           </div>
 

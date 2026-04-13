@@ -199,8 +199,8 @@ export const mapPage = {
   // Page shell — full height, no scroll
   root: "h-screen flex flex-col bg-background overflow-hidden",
   // Controls overlay — gradient backdrop for clean separation
-  controlsWrap: "absolute top-0 left-0 right-0 z-20 pointer-events-none bg-gradient-to-b from-background via-background/80 to-transparent pb-4",
-  controlsInner: "w-full max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 pt-2 pointer-events-auto space-y-2",
+  controlsWrap: "absolute top-0 left-0 right-0 z-20 pointer-events-none bg-gradient-to-b from-background via-background/80 to-transparent pb-4 pt-safe",
+  controlsInner: "w-full max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 pt-3 pointer-events-auto space-y-2.5",
   // Map container
   mapWrap: "relative flex-1 w-full",
   // Bottom results carousel — docked at bottom of mapWrap (root reserves nav space via inline paddingBottom)

@@ -355,7 +355,20 @@ export default function ChaletDetailPage() {
             type="button"
             className={`${s.heroShare} z-10`}
             aria-label={isRTL ? "مشاركة" : "Share"}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation()
+              if (typeof window === "undefined") return
+              const url = window.location.href
+              const title = displayTitle
+              const nav = navigator as Navigator & {
+                share?: (data: { title?: string; url?: string }) => Promise<void>
+              }
+              if (nav.share) {
+                nav.share({ title, url }).catch(() => { /* user cancelled */ })
+              } else if (nav.clipboard) {
+                nav.clipboard.writeText(url).catch(() => { /* permission denied */ })
+              }
+            }}
           >
             <Share2 className={s.heroShareIcon} aria-hidden />
           </button>
@@ -727,9 +740,26 @@ export default function ChaletDetailPage() {
               </p>
             )}
           </div>
-          <button type="button" className={s.stickyPrimary}>
+          <a
+            href={`https://wa.me/96500000000?text=${encodeURIComponent(
+              isRTL
+                ? `مرحباً، أود طلب حجز لـ ${displayTitle}${
+                    checkIn && checkOut
+                      ? ` من ${checkIn.toLocaleDateString("en-US")} إلى ${checkOut.toLocaleDateString("en-US")} (${nightCount} ليالي)`
+                      : ""
+                  } — باقة ${isRTL ? activePkg.ar : activePkg.en}`
+                : `Hi, I'd like to request a booking for ${displayTitle}${
+                    checkIn && checkOut
+                      ? ` from ${checkIn.toLocaleDateString("en-US")} to ${checkOut.toLocaleDateString("en-US")} (${nightCount} nights)`
+                      : ""
+                  } — ${activePkg.en} package`,
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${s.stickyPrimary} flex items-center justify-center`}
+          >
             {isRTL ? "طلب حجز" : "Request Booking"}
-          </button>
+          </a>
           <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.stickySecondary} aria-label="WhatsApp">
             <WhatsAppIcon className={s.stickySecondaryIcon} />
           </a>

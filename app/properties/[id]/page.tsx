@@ -93,6 +93,12 @@ export default function PropertyDetailsPage({ params }: PageProps) {
   const priceLine = `${p.price.toLocaleString()} KD`
   const priceSuffix = p.pricePeriod === "mo" ? (isRTL ? "/ شهر" : "/ mo") : ""
 
+  const bookViewingHref = `https://wa.me/96500000000?text=${encodeURIComponent(
+    isRTL
+      ? `مرحباً، أود حجز معاينة لعقار ${displayTitle} (${priceLine}${priceSuffix ? " " + priceSuffix : ""})`
+      : `Hi, I'd like to book a viewing for ${displayTitle} (${priceLine}${priceSuffix ? " " + priceSuffix : ""})`,
+  )}`
+
   const listedText = isRTL
     ? `أُدرج منذ ${p.listedDaysAgo} أيام`
     : `Listed ${p.listedDaysAgo} days ago`
@@ -201,13 +207,15 @@ export default function PropertyDetailsPage({ params }: PageProps) {
         {/* Contact actions */}
         <div className={s.actionSection}>
           <div className="flex flex-col gap-2">
-            <button
-              type="button"
+            <a
+              href={bookViewingHref}
+              target="_blank"
+              rel="noopener noreferrer"
               className="h-11 rounded-2xl bg-primary-600 hover:bg-primary-700 text-white text-sm font-semibold transition-colors duration-150 flex items-center justify-center gap-2"
             >
               <CalendarCheck className="h-4 w-4" />
               {isRTL ? "حجز معاينة" : "Book Viewing"}
-            </button>
+            </a>
             <div className="flex gap-2">
               <a
                 href="https://wa.me/96500000000"
@@ -325,12 +333,14 @@ export default function PropertyDetailsPage({ params }: PageProps) {
             <span className={s.stickyPrice} dir="ltr">{priceLine}</span>
             {priceSuffix && <span className={s.stickyPriceSuffix}> {priceSuffix}</span>}
           </div>
-          <button
-            type="button"
-            className={s.stickyPrimary}
+          <a
+            href={bookViewingHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${s.stickyPrimary} flex items-center justify-center`}
           >
             {isRTL ? "حجز معاينة" : "Book Viewing"}
-          </button>
+          </a>
           <a href="https://wa.me/96500000000" target="_blank" rel="noopener noreferrer" className={s.stickySecondary} aria-label="WhatsApp">
             <WhatsAppIcon className={s.stickySecondaryIcon} />
           </a>

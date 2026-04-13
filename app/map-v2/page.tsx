@@ -155,7 +155,7 @@ export default function MapV2Page() {
     <div
       className={mp.root}
       dir={isRTL ? "rtl" : "ltr"}
-      style={{ paddingBottom: "calc(3.5rem + env(safe-area-inset-bottom, 0px))" }}
+      style={{ paddingBottom: "calc(4rem + env(safe-area-inset-bottom, 0px))" }}
     >
       <style>{`
         footer, [data-footer] { display: none !important; }
