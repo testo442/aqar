@@ -144,12 +144,12 @@ export default function UIV2Page() {
         </div>
 
         {/* Contact Us */}
-        <section className="mt-6 mb-4">
+        <section className="mt-8 mb-6">
           <h2 className={sec.title}>{isRTL ? "تواصل معنا" : "Contact Us"}</h2>
-          <p className="text-xs text-slate-500 mt-1 mb-3 rtl:text-[13px]">
+          <p className="text-xs text-slate-500 mt-1.5 mb-4 rtl:text-[13px]">
             {isRTL ? "نسعد بمساعدتك في أي وقت" : "We're here to help anytime"}
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2.5">
             <a
               href="https://wa.me/96500000000"
               target="_blank"

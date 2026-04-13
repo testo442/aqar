@@ -11,24 +11,24 @@
 
 // ─── Page layout ─────────────────────────────────────────────────────────────
 export const page = {
-  root: "min-h-screen bg-background pb-24 md:pb-10",
-  container: "w-full max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-5 md:px-6 pt-3",
+  root: "min-h-screen bg-background pb-nav-safe md:pb-10",
+  container: "w-full max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 pt-4 md:pt-3",
   heroGrid: "md:grid md:grid-cols-[1fr_minmax(0,380px)] lg:grid-cols-[1fr_minmax(0,440px)] md:gap-5 md:items-start",
-  controlsCol: "flex flex-col gap-2.5 mb-3 md:mb-0",
+  controlsCol: "flex flex-col gap-3 mb-6 md:mb-0",
 } as const
 
 // ─── App Header ──────────────────────────────────────────────────────────────
 export const header = {
-  root: "sticky top-0 z-40 w-full bg-card border-b border-border",
-  inner: "max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-5 h-14",
-  row: "h-full flex items-center justify-between",
-  logo: "flex items-center gap-2",
-  logoIcon: "h-6 w-6 text-primary-600",
-  logoText: "text-[19px] font-black text-slate-900 tracking-tight leading-none",
-  logoSub: "text-[10px] font-medium text-slate-500 tracking-wide uppercase leading-none mt-0.5",
-  langToggle: "flex items-center rounded-full border border-border shadow-sm overflow-hidden",
-  langActive: "px-3 py-1.5 text-[11px] font-semibold bg-primary-600 text-white",
-  langInactive: "px-3 py-1.5 text-[11px] font-semibold bg-card text-slate-500 hover:text-slate-700 transition-colors duration-150",
+  root: "sticky top-0 z-40 w-full bg-card border-b border-border pt-safe",
+  inner: "max-w-[600px] md:max-w-3xl lg:max-w-5xl mx-auto px-4 md:px-6 h-16 md:h-14",
+  row: "h-full flex items-center justify-between gap-3",
+  logo: "flex items-center gap-2.5 min-w-0 flex-shrink",
+  logoIcon: "h-7 w-7 md:h-6 md:w-6 text-primary-600 flex-shrink-0",
+  logoText: "text-[20px] md:text-[19px] font-black text-slate-900 tracking-tight leading-none",
+  logoSub: "text-[11px] md:text-[10px] font-medium text-slate-500 tracking-wide uppercase leading-none mt-1 truncate",
+  langToggle: "flex items-center rounded-full border border-border shadow-sm overflow-hidden flex-shrink-0",
+  langActive: "px-3.5 py-2 md:py-1.5 text-[12px] md:text-[11px] font-semibold bg-primary-600 text-white",
+  langInactive: "px-3.5 py-2 md:py-1.5 text-[12px] md:text-[11px] font-semibold bg-card text-slate-500 hover:text-slate-700 transition-colors duration-150",
 } as const
 
 // ─── Search Bar ──────────────────────────────────────────────────────────────
@@ -53,8 +53,8 @@ export const searchBar = {
 
 // ─── Segmented Control ───────────────────────────────────────────────────────
 export const segmented = {
-  bar: "flex items-center w-full bg-muted rounded-2xl p-1 border border-border",
-  item: "flex-1 flex items-center justify-center gap-1 py-2 rounded-xl text-[13px] font-medium transition-all duration-150 whitespace-nowrap rtl:text-[14px]",
+  bar: "flex items-center w-full bg-muted rounded-2xl p-1.5 border border-border",
+  item: "flex-1 flex items-center justify-center gap-1 py-2.5 rounded-xl text-[13px] font-medium transition-all duration-150 whitespace-nowrap rtl:text-[14px]",
   active: "bg-card text-primary-600 font-semibold shadow-sm",
   inactive: "text-slate-500 hover:text-slate-600",
   chevron: "h-3 w-3",
@@ -90,8 +90,8 @@ export const mapCard = {
 
 // ─── Section headers ─────────────────────────────────────────────────────────
 export const section = {
-  wrapper: "mt-5",
-  headerRow: "flex items-baseline justify-between mb-3",
+  wrapper: "mt-6",
+  headerRow: "flex items-baseline justify-between mb-4",
   title: "text-base font-black text-slate-900 rtl:text-[17px] rtl:leading-relaxed",
   viewAll: "text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors duration-150 rtl:text-[13px]",
 } as const
@@ -99,7 +99,7 @@ export const section = {
 // ─── Carousel ────────────────────────────────────────────────────────────────
 export const carousel = {
   outerWrap: "-mx-4",
-  rail: "flex gap-3 pl-4 overflow-x-auto scrollbar-hide pb-1 snap-x snap-mandatory scroll-smooth",
+  rail: "flex gap-3 pl-4 overflow-x-auto scrollbar-hide pb-2 snap-x snap-mandatory scroll-smooth",
   endSpacer: "w-12 flex-shrink-0",
 } as const
 
@@ -110,24 +110,24 @@ export const listingCard = {
   imageAspect: { aspectRatio: "4/3" } as React.CSSProperties,
   image: "object-cover",
   // Fixed vertical structure — every row has a stable height so cards always align
-  body: "px-3 pt-2 pb-3 flex flex-col flex-1",
-  title: "text-[13px] font-bold text-slate-900 line-clamp-1 leading-snug rtl:text-[14px] rtl:leading-normal h-[18px]",
-  priceRow: "flex items-baseline gap-1 h-[20px] mt-0.5",
+  body: "px-3.5 pt-2.5 pb-3.5 flex flex-col flex-1",
+  title: "text-[13px] font-bold text-slate-900 line-clamp-1 leading-snug rtl:text-[14px] rtl:leading-normal h-[20px]",
+  priceRow: "flex items-baseline gap-1 h-[22px] mt-1",
   price: "text-[13px] font-bold text-primary-600 leading-snug",
   priceSuffix: "text-[11px] font-normal text-slate-500",
-  ratingRow: "flex items-center gap-1 h-[16px] mt-0.5",
+  ratingRow: "flex items-center gap-1 h-[18px] mt-1",
   star: "text-amber-400 text-[11px] leading-none",
   ratingText: "text-[11px] font-medium text-slate-500 rtl:text-[12px]",
   verifiedIcon: "text-primary-600 text-[11px] leading-none",
-  metaRow: "text-[11px] text-slate-500 leading-snug h-[16px] rtl:text-[12px]",
-  chipWrap: "pt-1.5 mt-auto",
+  metaRow: "text-[11px] text-slate-500 leading-snug h-[18px] mt-0.5 rtl:text-[12px]",
+  chipWrap: "pt-2.5 mt-auto",
   chip: "inline-flex items-center gap-0.5 bg-muted text-slate-600 text-[10px] font-medium px-2 py-0.5 rounded-full border border-border rtl:text-[11px] rtl:px-2.5",
   chipIcon: "h-2.5 w-2.5 flex-shrink-0",
 } as const
 
 // ─── Trust bar ───────────────────────────────────────────────────────────────
 export const trustBar = {
-  wrapper: "flex items-center justify-center gap-2 py-4",
+  wrapper: "flex items-center justify-center gap-2 mt-6 py-5",
   item: "flex items-center gap-1",
   icon: "text-primary-600 text-[11px]",
   text: "text-[11px] font-medium text-slate-600 rtl:text-[12px]",
@@ -138,10 +138,10 @@ export const trustBar = {
 // ─── Bottom Nav ──────────────────────────────────────────────────────────────
 export const bottomNav = {
   root: "fixed bottom-0 left-0 right-0 z-40 md:hidden bg-card/90 backdrop-blur-sm border-t border-border pb-safe",
-  grid: "grid grid-cols-5 h-14",
-  item: "relative flex flex-col items-center justify-center gap-0.5 transition-colors duration-150",
-  iconActive: "h-[18px] w-[18px] text-primary-600",
-  iconInactive: "h-[18px] w-[18px] text-slate-500",
+  grid: "grid grid-cols-5 h-16",
+  item: "relative flex flex-col items-center justify-center gap-1 transition-colors duration-150",
+  iconActive: "h-[20px] w-[20px] text-primary-600",
+  iconInactive: "h-[20px] w-[20px] text-slate-500",
   labelActive: "text-[10px] font-bold text-primary-600",
   labelInactive: "text-[10px] font-semibold text-slate-500",
   dot: "absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-600",
